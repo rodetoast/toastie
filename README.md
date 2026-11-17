@@ -376,7 +376,7 @@ python -m PyInstaller --clean ase_viewer.spec
   그룹으로 분리했습니다. 캐릭터 그룹은 현재 사용자 `key_map`에서
   공격, 대시, 점프, 교대, 스킬 1~3을 읽습니다. 앱 그룹은 실제 이벤트
   처리와 일치하는 `P` 일시정지, `O` 한 프레임, `[ ]` 현재 재생 속도,
-  `F5` 새로고침, `F10` 성능 표시, `H` 히트박스, `R-Drag` 카메라 이동,
+  `F5` 새로고침, `F9` 체력 회복, `F10` 성능 표시, `H` 히트박스, `R-Drag` 카메라 이동,
   `F` 카메라 복귀를 표시합니다.
 - 두 그룹은 태그 등록, OPTIONS, 배치, 리소스에서 같은 공통 overlay로
   표시됩니다. 최소 폭에서는 그룹별로 자동 줄바꿈하며 sidebar scroll
@@ -630,6 +630,74 @@ python -m PyInstaller --clean ase_viewer.spec
 > ZIP before running it.
 
 코드 서명과 SmartScreen 평판 대응은 후속 TODO입니다.
+
+### v0.5.8.4 Recovery FX / Combat Phase / Runtime Icon
+
+- `F9`는 저장·재매핑되지 않는 App Shortcut입니다. 숫자/텍스트 입력,
+  키 바인딩 대기 또는 확인 팝업 중에는 동작하지 않으며 Player HP와
+  피격 테스트를 막는 최소 런타임 상태만 초기화합니다. 위치와
+  NPC/PROP/Partner/Corpse, 프로젝트/설정 파일은 변경하지 않습니다.
+- 회복 시 기존 particle update/render 경로에 480ms 민트·청록·연두
+  궤도 파티클 12개를 생성합니다. 반복 입력은 이전 회복 파티클만
+  교체하므로 누적되지 않습니다.
+- NPC 공격 슬롯 안의 `Ready`, `Windup`, `Prepare`, `Prep`, `Start`,
+  `Intro`, `Recover`, `Recovery`, `End`, `Outro` 태그는 대소문자,
+  구분자, camel case와 무관하게 damage/hitbox에서 제외합니다. 35~60%
+  활성 구간은 준비 태그를 포함한 전체 슬롯이 아니라 실제 damage 태그
+  지속시간에 적용합니다.
+- 실제 `TwistedSoldier.aseprite`의 `ThrustForward_Ready`(29–38)와
+  `ThrustForward`(39–47) 순서를 읽기 전용으로 확인했으며 원본은
+  수정하지 않았습니다.
+- `Icon.ico` EXE 리소스를 유지하면서 `Icon.png`를 PyInstaller onefile
+  data로 포함하고, window 생성 전에 pygame runtime icon과 Windows의
+  안정적인 `ToastSource.AsepriteActionViewer` AppUserModelID를
+  설정합니다. 실패 시 debug log만 남기고 앱 실행은 계속합니다.
+- 소스 검사와 86개 독립 테스트 모듈(429 tests, 선택적 fixture 1 skip)이
+  통과했습니다. 새 EXE는 19,607,852 bytes, SHA-256
+  `3BF37DDDE0C1666E133D0EE1F2DA9D1118F4F92CD5799A392097CC83D67CC233`
+  이며 Tcl/Tk 8.6.12와 runtime icon asset을 확인했습니다.
+- 예제 포함 내부 배포 ZIP은
+  `ase_viewer_v0.5.8.4_with_examples.zip`(22,085,231 bytes), SHA-256
+  `2532C273C4CF9930CF882EF1F84CAE55C9A97479A69123431560B1299EDEC2D2`
+  입니다. ZIP 내부 release note는 자기 자신의 최종 해시를 포함할 수
+  없으므로 동반 `.sha256`과 현재 workspace 문서를 기준으로 확인합니다.
+
+> v0.5.8.4 내부 배포 후보도 코드 서명하지 않았습니다. Windows에서
+> Unknown Publisher 또는 SmartScreen 경고가 표시될 수 있습니다.
+
+### v0.5.8.5 Viewport Quick Inspector (source only)
+
+- 뷰포트 조작은 `Left Click = 객체 선택`, `Left Drag = Player/NPC/PROP
+  런타임 위치 이동`, `Right Click = Quick Inspector`, `Right Drag = 기존
+  카메라 팬`, `Inspector Header Drag = 패널 이동`입니다. 클릭/드래그는
+  6px 기준으로 분리하며 실제 프레임 경계와 렌더 순서 역순으로 최상단
+  오브젝트를 찾습니다.
+- Inspector를 직접 옮긴 위치는 같은 실행 세션의 대상 전환과 닫기/다시
+  열기에서 유지되며 뷰포트 안으로 제한됩니다. 빈 공간 좌클릭, `Esc`,
+  대상 제거는 Inspector를 닫고 숨은 반복 미리보기도 함께 정지합니다.
+- 태그 드롭다운은 최대 8행과 스크롤 표시기를 사용합니다. 열린 동안의
+  현대식 Wheel 및 Windows 레거시 button 4/5 입력은 태그 목록이 먼저
+  소비하므로 드롭다운이 닫히거나 뷰포트 zoom으로 전달되지 않고, 방향키/PageUp/
+  PageDown/Home/End로 선택 태그를 이동할 수 있습니다.
+- 태그 단독 또는 기존 프로필 매핑의 전체 시퀀스를 화면에서만 강제
+  미리보기하며 `한 번/반복`을 독립 선택할 수 있습니다. 한 번은 Loop 태그도
+  frame range를 한 번만 통과하고, 전체 시퀀스 반복은 전체 묶음이 끝난 뒤
+  처음으로 돌아갑니다.
+- Forced Preview 중 Player gameplay input/이동과 NPC AI·이동·Dash·Jump·
+  Attack 진행은 reset 없이 일시 정지합니다. 사용자 Left Drag는 허용하며
+  피해·투사체·공격 hitbox는 만들지 않습니다. Stop/한 번 완료 후 보존한
+  정상 상태가 다음 tick부터 다시 진행됩니다.
+- NPC는 같은 프로필 소환/즉시 제거/기존 사망 처리, PROP은 같은 프로필
+  배치/즉시 제거/기존 파괴 처리, Player는 기존 `spawn_x/spawn_y` 위치로
+  복귀하고 이동 속도만 지우는 위치 초기화를 제공합니다. HP·프로필·리소스와
+  애니메이션 상태는 유지됩니다. 패널 높이는 타입별 마지막 컨트롤과 10px
+  하단 여백에서 계산되며, 대상 전환 시 수동 위치를 유지한 채 다시 clamp합니다.
+  상세 설정은 기존 선택 상태를 유지한 채 OPTIONS로 이동합니다.
+- Inspector의 열린 상태, 대상 객체 참조, 선택 태그와 강제 프레임은
+  물론 반복/드롭다운/패널 위치/객체 드래그 상태도 프로젝트·설정 JSON에
+  저장하지 않습니다. 실제 사망·파괴 핸들러는 Preview보다 우선합니다.
+- 이번 변경은 source/test/documentation 전용입니다. 기존 v0.5.8.4
+  EXE/ZIP/SHA 및 사용자 JSON, Aseprite 원본은 수정하지 않았습니다.
 
 ### v0.5.8.3.1 Tcl/Tk Runtime Build Fix
 

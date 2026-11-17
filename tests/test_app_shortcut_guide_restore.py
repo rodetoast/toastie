@@ -11,7 +11,7 @@ class AppShortcutGuideRestoreTests(unittest.TestCase):
         keys = [key for key, _, _ in ase_viewer.app_shortcut_guide_items()]
         self.assertEqual(
             keys,
-            ["P", "O", "[ ]", "F5", "F10", "H", "R-Drag", "F"],
+            ["P", "O", "[ ]", "F5", "F9", "F10", "H", "R-Drag", "F"],
         )
 
     def test_f10_retains_performance_help_tooltip(self):
@@ -33,7 +33,7 @@ class AppShortcutGuideRestoreTests(unittest.TestCase):
     def test_restored_shortcuts_match_live_input_constants(self):
         source_names = {
             pygame.K_p: "P", pygame.K_o: "O",
-            pygame.K_F5: "F5", pygame.K_F10: "F10",
+            pygame.K_F5: "F5", pygame.K_F9: "F9", pygame.K_F10: "F10",
             pygame.K_h: "H", pygame.K_f: "F",
         }
         guide_keys = {

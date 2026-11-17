@@ -35,7 +35,7 @@ class WindowDefaultTests(unittest.TestCase):
         )
 
     def test_version_is_shared_by_title_and_check_source(self):
-        self.assertEqual(ase_viewer.APP_VERSION, "v0.5.8.3")
+        self.assertEqual(ase_viewer.APP_VERSION, "v0.5.8.5")
         self.assertIn(ase_viewer.APP_VERSION, ase_viewer.app_window_title())
         self.assertIn(ase_viewer.APP_VERSION, ase_viewer.application_check_success_message(9))
 

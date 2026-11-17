@@ -267,6 +267,75 @@
 - [ ] 파일 열기/저장 dialog, 파일 탐색기·작업 표시줄·Alt+Tab 아이콘이
   정상이다.
 - [ ] 동반 `.sha256`과 ZIP 실제 SHA-256이 일치한다.
+
+## v0.5.8.4 Recovery / NPC Attack Phase / Runtime Icon
+
+### Recovery
+
+- [ ] HP가 0인 Player에서 F9를 누르면 max HP로 즉시 회복한다.
+- [ ] Player 몸 주변에 짧은 민트/청록/연두 회복 FX가 보이고 자동으로 사라진다.
+- [ ] HP가 이미 가득 찬 상태에서도 F9가 안전하고 FX는 재생된다.
+- [ ] 반복 F9 입력이 파티클을 계속 누적하지 않는다.
+- [ ] F9 전후 Player 위치와 NPC/PROP/Partner/Corpse 상태가 같다.
+- [ ] 숫자/텍스트 입력, 키 바인딩 대기, 확인 팝업 중 F9가 동작하지 않는다.
+- [ ] F9가 조작키 remap 목록이 아니라 하단 App guide와 OPTIONS 조작·앱에만 보인다.
+
+### NPC attack phase
+
+- [ ] TwistedSoldier의 `ThrustForward_Ready`에서는 Hit Slice가 있어도 피해가 없다.
+- [ ] 이어지는 `ThrustForward` 실제 공격 구간에서는 정상 피해가 들어간다.
+- [ ] `ThrustForward` 시작 직후 피해가 가능하고 로컬 25% 이후에는 피해가 없다.
+- [ ] Ready/Windup/Prepare/Intro/Recover/End 계열에서 fallback hitbox도 생기지 않는다.
+- [ ] 순수 `Attack`과 `ComboAttack_1~n`은 기존처럼 공격하고 segment별 한 번만 적중한다.
+- [ ] ComboAttack chain, attack lock, Intro lock/no jump가 그대로 동작한다.
+
+### Icon / package
+
+- [ ] 새 폴더에 ZIP을 풀고 파일 탐색기에서 EXE 아이콘이 보인다.
+- [ ] 프로그램 창 좌측 상단, 작업 표시줄, Alt+Tab에 아이콘이 보인다.
+- [ ] 아이콘 캐시가 남으면 새 폴더 이름으로 다시 압축 해제해 확인한다.
+- [ ] `ase_viewer.exe --check`가 examples 9/9, Tcl/Tk 8.6.12,
+  `runtime_icon=available`과 종료 코드 0을 보고한다.
+- [ ] `ase_viewer.exe --check-sidebar-ui`가 종료 코드 0이다.
+- [ ] EX1/EX2 선택 시 missing resources 팝업이 없고 파일 dialog가 정상이다.
+- [ ] 상단 순서, OPTIONS 3탭, slider Reset, LAYERS/VFX 위치, 번역, 대쉬
+  한 세트, T 교대, G corpse 제외, Intro, corpse snap, parallax gizmo와
+  undo/redo를 재확인한다.
+- [ ] 미서명 빌드의 Unknown Publisher/SmartScreen 가능성을 사용자에게 안내한다.
 - [ ] 미서명 앱의 Unknown Publisher/SmartScreen 경고 가능성을 확인한다.
 - [ ] OPTIONS 3탭, Reset, 번역, 대쉬 표시, T/G/Combo/Intro/Corpse/
   Parallax 기능이 유지된다.
+
+## v0.5.8.5 Viewport Quick Inspector
+
+- [ ] Player/NPC/PROP 좌클릭은 대상만 선택하고 Inspector를 열지 않는다.
+- [ ] Player/NPC/PROP을 각각 좌드래그하면 잡은 지점 offset과 zoom/camera
+  변환을 유지하며 위치가 바뀐다. 드래그 중 정상 이동/AI가 위치와 싸우지 않는다.
+- [ ] 지원 객체 우클릭은 Inspector를 열고, 6px 초과 우드래그는 기존 카메라
+  팬만 수행한다. 빈 공간 우클릭은 새 Inspector를 열지 않는다.
+- [ ] 겹친 대상은 화면에서 가장 위에 그려진 대상 하나만 선택된다.
+- [ ] 플랫폼 편집과 패럴랙스 기즈모 조작은 객체 드래그/Inspector로 누출되지 않는다.
+- [ ] 패널은 대상 근처에서 뷰포트를 벗어나지 않고, 열린 뒤 대상/카메라가
+  움직여도 위치가 고정된다. 빈 공간 클릭과 Esc로 닫힌다.
+- [ ] 20개 이상 태그에서 드롭다운은 최대 8행이며 휠·스크롤 표시기·방향키·
+  PageUp/PageDown/Home/End로 마지막 태그까지 선택된다. 열린 목록/콤보 위에서
+  휠을 내려도 목록만 움직이고 드롭다운은 열린 채이며 viewport zoom은 변하지 않는다.
+- [ ] Current Tag/Full Sequence와 Once/Repeat 네 조합, Loop+Once/Repeat,
+  전체 시퀀스 반복 순서와 Stop을 각각 확인한다.
+- [ ] Preview 중 NPC AI 이동/Dash/Jump/Attack/hitbox/projectile/damage가 없고
+  Stop 후 기존 AI/attack state가 reset 없이 재개된다.
+- [ ] Preview 중 Player 이동/Jump/Dash/Attack/Combo가 없고 Dead 태그가 실제
+  HP/death를 바꾸지 않는다. PROP Break/Destroyed도 실제 파괴/파편을 만들지 않는다.
+- [ ] Inspector 헤더만 드래그되고 버튼/드롭다운 조작은 패널을 움직이지 않는다.
+  네 모서리 clamp, 대상 전환 및 닫기/재열기 위치 유지도 확인한다.
+- [ ] NPC 소환/제거/사망과 PROP 배치/제거/파괴가 각각 기존 연출 경로를
+  사용하고, Player에는 제거/사망 버튼이 없다.
+- [ ] Player에는 좌우 보기 버튼이 없고 `플레이어 위치 초기화`가 있다. 실행하면
+  `spawn_x/spawn_y`로 복귀하고 속도만 0이 되며 HP·리소스·프로필은 유지된다.
+- [ ] Player/NPC/PROP의 `상세 설정` 및 모든 타입별 버튼이 패널 배경 안에 있고
+  아래에 약 10px 여백이 남는다. 타입 전환 시 수동 위치를 유지하고 새 높이로 clamp된다.
+- [ ] 상세 설정이 기존 대상 선택을 유지한 채 올바른 OPTIONS 구역을 연다.
+- [ ] 제거된 대상의 Inspector가 자동으로 닫히고 같은 이름의 다른 인스턴스로
+  바뀌지 않는다.
+- [ ] 프로젝트/설정 저장 후 JSON에 Inspector와 강제 애니메이션 상태가 없다.
+- [ ] 한국어/영어에서 버튼, 긴 태그명, 툴팁과 좁은 창 배치가 읽을 수 있다.

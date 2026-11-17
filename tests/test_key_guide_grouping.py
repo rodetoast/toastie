@@ -28,7 +28,7 @@ class KeyGuideGroupingTests(unittest.TestCase):
         self.assertIn("F10", {key for key, _, _ in app})
         self.assertFalse(
             {key for key, _, _ in character}
-            & {"P", "O", "[ ]", "F5", "F10", "H", "R-Drag", "F"},
+            & {"P", "O", "[ ]", "F5", "F9", "F10", "H", "R-Drag", "F"},
         )
 
     def test_group_titles_are_localized(self):

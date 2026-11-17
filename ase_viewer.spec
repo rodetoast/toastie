@@ -5,7 +5,7 @@ a = Analysis(
     ['ase_viewer.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('Icon.png', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

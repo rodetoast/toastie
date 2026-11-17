@@ -20,7 +20,7 @@ from types import SimpleNamespace
 APP_ROOT = os.path.dirname(os.path.abspath(sys.executable if getattr(sys, "frozen", False) else __file__))
 RESOURCE_ROOT = getattr(sys, "_MEIPASS", APP_ROOT)
 ASEPRITE_TIMEOUT_SECONDS = 120
-APP_VERSION = "v0.5.8.3"
+APP_VERSION = "v0.5.8.5"
 APP_TITLE = "Aseprite Action Viewer"
 SIDEBAR_WIDTH = 450
 TOP_UI_HEIGHT = 70
@@ -74,6 +74,29 @@ TRANSLATIONS = {
         "common.clear": "지우기",
         "common.up": "위",
         "common.down": "아래",
+        "common.play": "재생",
+        "common.stop": "정지",
+        "common.close": "닫기",
+        "common.details": "상세 설정",
+        "quick.title": "빠른 검사",
+        "quick.tag": "태그",
+        "quick.current_tag": "현재 태그",
+        "quick.full_sequence": "전체 시퀀스",
+        "quick.once": "한 번",
+        "quick.repeat": "반복",
+        "quick.preview_active": "▶ 미리보기 중",
+        "quick.no_tags": "사용 가능한 태그 없음",
+        "quick.spawn_another": "하나 더 소환",
+        "quick.place_another": "하나 더 배치",
+        "quick.despawn": "즉시 제거",
+        "quick.kill": "사망 처리",
+        "quick.destroy": "파괴 처리",
+        "quick.reset_player_position": "플레이어 위치 초기화",
+        "tooltip.quick.play": "선택한 태그를 화면에서만 미리 봅니다. 공격 판정과 AI 상태는 바뀌지 않습니다.",
+        "tooltip.quick.stop": "강제 미리보기를 끝내고 원래 런타임 애니메이션으로 돌아갑니다.",
+        "tooltip.quick.details": "선택 대상을 유지한 채 기존 상세 설정 화면을 엽니다.",
+        "tooltip.quick.remove": "이 인스턴스만 즉시 장면에서 제거합니다. 사망·파괴 연출은 실행하지 않습니다.",
+        "tooltip.quick.reset_player_position": "플레이어를 기존 시작 위치로 되돌리고 이동 속도만 초기화합니다.",
         "ui.setup": "⚙ 옵션",
         "ui.edit_platform": "플랫폼 편집",
         "ui.add_platform": "+ 플랫폼",
@@ -105,6 +128,7 @@ TRANSLATIONS = {
         "guide.skills": "스킬",
         "guide.synergy": "합격기",
         "guide.refresh": "새로고침",
+        "guide.recover_hp": "체력 회복",
         "guide.pause": "일시정지",
         "guide.step": "1프레임 진행",
         "guide.speed": "속도 조절",
@@ -123,6 +147,7 @@ TRANSLATIONS = {
         "tooltip.guide.step": "일시정지 중 애니메이션을 정확히 1프레임 진행합니다.",
         "status.recall_live_npcs": "살아 있는 NPC {count}개를 플레이어 주변으로 불러왔습니다.",
         "status.recall_no_live_npcs": "불러올 수 있는 살아 있는 NPC가 없습니다.",
+        "status.hp_restored": "체력 회복",
         "ui.replay_npc_intro": "Intro 다시 재생",
         "npc_behavior.balanced": "균형",
         "npc_behavior.idle": "대기",
@@ -257,10 +282,10 @@ TRANSLATIONS = {
         "settings.section.view_background": "화면·배경",
         "settings.quick.flow": "리소스 등록 → 태그 등록 → 역할 배정 → 배치 → AI/전투 설정",
         "settings.quick.selection": "현재 선택: {actor} | {resource}",
-        "settings.quick.shortcuts": "빠른 확인: F5 새로고침 · F10 성능 · H 히트박스",
+        "settings.quick.shortcuts": "빠른 확인: F5 새로고침 · F9 체력 회복 · F10 성능 · H 히트박스",
         "settings.quick.guides": "하단에는 캐릭터 조작과 프로그램 단축키가 분리되어 표시됩니다.",
         "settings.input.character": "캐릭터: 공격·대시·점프·교대·스킬 1~3·합격기",
-        "settings.input.app": "프로그램: P/O/[ ]/F5/F10/H/우클릭 드래그/F",
+        "settings.input.app": "프로그램: P/O/[ ]/F5/F9/F10/H/우클릭 드래그/F",
         "settings.input.fast_action": "빠른 액션은 캐릭터 조작 범위이며 현재 키를 강제로 바꾸지 않습니다.",
         "settings.input.controller_todo": "컨트롤러 감지·버튼 매핑·데드존·듀얼 가이드는 후속 작업입니다.",
         "settings.ai.behavior": "NPC 행동과 Intro 다시 재생은 선택 NPC/현재 프로필에 적용됩니다.",
@@ -492,6 +517,29 @@ TRANSLATIONS = {
         "common.clear": "Clear",
         "common.up": "Up",
         "common.down": "Down",
+        "common.play": "Play",
+        "common.stop": "Stop",
+        "common.close": "Close",
+        "common.details": "Details",
+        "quick.title": "Quick Inspector",
+        "quick.tag": "Tag",
+        "quick.current_tag": "Current tag",
+        "quick.full_sequence": "Full sequence",
+        "quick.once": "Once",
+        "quick.repeat": "Repeat",
+        "quick.preview_active": "▶ Preview active",
+        "quick.no_tags": "No tags available",
+        "quick.spawn_another": "Spawn another",
+        "quick.place_another": "Place another",
+        "quick.despawn": "Despawn",
+        "quick.kill": "Kill",
+        "quick.destroy": "Destroy",
+        "quick.reset_player_position": "Reset Player Position",
+        "tooltip.quick.play": "Previews the selected tag visually only. Hit detection and AI state are unchanged.",
+        "tooltip.quick.stop": "Stops the forced preview and returns to the runtime animation.",
+        "tooltip.quick.details": "Keeps this target selected and opens its existing detailed settings.",
+        "tooltip.quick.remove": "Immediately removes only this instance without death or destruction effects.",
+        "tooltip.quick.reset_player_position": "Returns the player to the existing start position and clears movement velocity only.",
         "ui.setup": "⚙ Setup",
         "ui.edit_platform": "Edit Platform",
         "ui.add_platform": "+ Platform",
@@ -523,6 +571,7 @@ TRANSLATIONS = {
         "guide.skills": "Skills",
         "guide.synergy": "Synergy",
         "guide.refresh": "Refresh",
+        "guide.recover_hp": "Reset HP",
         "guide.pause": "Pause",
         "guide.step": "Step 1 frame",
         "guide.speed": "Speed",
@@ -541,6 +590,7 @@ TRANSLATIONS = {
         "tooltip.guide.step": "Advances the animation by exactly one frame while paused.",
         "status.recall_live_npcs": "Recalled {count} living NPC(s) near the Player.",
         "status.recall_no_live_npcs": "There are no living NPCs to recall.",
+        "status.hp_restored": "HP Restored",
         "ui.replay_npc_intro": "Replay Intro",
         "npc_behavior.balanced": "Balanced",
         "npc_behavior.idle": "Idle",
@@ -675,10 +725,10 @@ TRANSLATIONS = {
         "settings.section.view_background": "View & Background",
         "settings.quick.flow": "Import Resource → Map Tags → Assign Role → Place → Configure AI / Combat",
         "settings.quick.selection": "Current: {actor} | {resource}",
-        "settings.quick.shortcuts": "Quick checks: F5 Refresh · F10 Performance · H Hitbox",
+        "settings.quick.shortcuts": "Quick checks: F5 Refresh · F9 Reset HP · F10 Performance · H Hitbox",
         "settings.quick.guides": "Character controls and app shortcuts remain separate in the bottom guide.",
         "settings.input.character": "Character: Attack, Dash, Jump, Swap, Skills 1–3, and Synergy",
-        "settings.input.app": "App: P/O/[ ]/F5/F10/H/Right-drag/F",
+        "settings.input.app": "App: P/O/[ ]/F5/F9/F10/H/Right-drag/F",
         "settings.input.fast_action": "Fast Action applies only to character controls and never overwrites current keys.",
         "settings.input.controller_todo": "Controller detection, mapping, deadzone, and dual guides remain follow-up work.",
         "settings.ai.behavior": "NPC behavior and Replay Intro target the selected NPC or current profile.",
@@ -1786,8 +1836,45 @@ def app_window_title():
     return f"{APP_TITLE} {APP_VERSION}"
 
 
+def runtime_icon_path():
+    """Resolve the PNG used by pygame without requiring a window."""
+    path = app_resource_path("Icon.png")
+    return path if os.path.isfile(path) else None
+
+
+def set_windows_app_user_model_id(app_id="ToastSource.AsepriteActionViewer"):
+    """Give Windows a stable taskbar identity; failures are non-fatal."""
+    if os.name != "nt":
+        return False
+    try:
+        import ctypes
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+        return True
+    except Exception as exc:
+        log_debug(f"[ICON] AppUserModelID unavailable: {exc}")
+        return False
+
+
+def set_runtime_window_icon():
+    """Load the bundled PNG as pygame's window/taskbar icon when available."""
+    icon_path = runtime_icon_path()
+    if not icon_path:
+        log_debug("[ICON] Runtime Icon.png not found; using platform fallback.")
+        return False
+    try:
+        icon = pygame.image.load(icon_path)
+        if icon.get_width() > 64 or icon.get_height() > 64:
+            icon = pygame.transform.smoothscale(icon, (64, 64))
+        pygame.display.set_icon(icon)
+        return True
+    except Exception as exc:
+        log_debug(f"[ICON] Runtime window icon unavailable: {exc}")
+        return False
+
+
 def application_check_success_message(
     example_count, expected_example_count=None, tk_patchlevel=None,
+    runtime_icon_available=None,
 ):
     message = (
         f"CHECK OK: {app_window_title()}; pygame {pygame.version.ver}; "
@@ -1799,6 +1886,12 @@ def application_check_success_message(
             message += "; external_example_resources_required=true"
     if tk_patchlevel:
         message += f"; tkinter_tcl={tk_patchlevel}"
+    if runtime_icon_available is not None:
+        message += (
+            "; runtime_icon=available"
+            if runtime_icon_available
+            else "; runtime_icon=missing"
+        )
     return message
 
 
@@ -3426,6 +3519,7 @@ def app_shortcut_guide_items(player=None):
         ("O", tr("guide.step"), "tooltip.guide.step"),
         ("[ ]", f"{tr('guide.speed')} {playback_speed:.1f}x", None),
         ("F5", tr("guide.refresh"), None),
+        ("F9", tr("guide.recover_hp"), None),
         ("F10", tr("guide.performance"), "performance.help"),
         ("H", tr("guide.hitbox"), None),
         ("R-Drag", tr("guide.camera"), None),
@@ -3481,6 +3575,772 @@ def split_actor_render_layers(player):
         ]
     )
     return below_player, foreground
+
+
+VIEWPORT_CLICK_THRESHOLD = 6
+QUICK_INSPECTOR_WIDTH = 314
+QUICK_INSPECTOR_DROPDOWN_ROWS = 8
+QUICK_INSPECTOR_TAG_ROW_HEIGHT = 24
+QUICK_INSPECTOR_HEADER_HEIGHT = 32
+QUICK_INSPECTOR_BOTTOM_PADDING = 10
+
+
+def viewport_screen_to_world(player, point, play_w, play_h):
+    """Convert a viewport point with the same camera/zoom convention as rendering."""
+    zoom = max(0.0001, _finite_number(getattr(player, "zoom", 1.0), 1.0))
+    return (
+        player.cam_x + (point[0] - play_w // 2) / zoom,
+        player.cam_y + (point[1] - play_h // 2) / zoom,
+    )
+
+
+def begin_viewport_object_drag(player, actor, point, play_w, play_h):
+    if actor is None or not quick_inspector_target_exists(player, actor):
+        return None
+    world_x, world_y = viewport_screen_to_world(player, point, play_w, play_h)
+    return {
+        "target": actor,
+        "start": tuple(point),
+        "offset": (actor.x - world_x, actor.y - world_y),
+        "dragging": False,
+    }
+
+
+def update_viewport_object_drag(player, state, point, play_w, play_h):
+    if not state or not quick_inspector_target_exists(player, state.get("target")):
+        return False
+    if not state.get("dragging"):
+        dx = point[0] - state["start"][0]
+        dy = point[1] - state["start"][1]
+        if math.hypot(dx, dy) <= VIEWPORT_CLICK_THRESHOLD:
+            return False
+        state["dragging"] = True
+        player.viewport_object_drag = state
+    world_x, world_y = viewport_screen_to_world(player, point, play_w, play_h)
+    actor = state["target"]
+    actor.x = world_x + state["offset"][0]
+    actor.y = world_y + state["offset"][1]
+    if bool(getattr(actor, "intro_locked", False)):
+        actor.intro_lock_x, actor.intro_lock_y = actor.x, actor.y
+    return True
+
+
+def end_viewport_object_drag(player, state):
+    was_dragging = bool(state and state.get("dragging"))
+    if getattr(player, "viewport_object_drag", None) is state:
+        player.viewport_object_drag = None
+    return was_dragging
+
+
+def actor_editor_motion_locked(player, actor):
+    drag = getattr(player, "viewport_object_drag", None)
+    return bool(
+        getattr(actor, "forced_animation_active", False)
+        or (drag and drag.get("dragging") and drag.get("target") is actor)
+    )
+
+
+_PLAYER_EDITOR_ISOLATION_ATTRS = (
+    "x", "y", "vx", "vy", "grounded", "jumps_left", "facing_right",
+    "active_action_slot", "active_tag_info", "action_queue", "action_end_frame",
+    "frame_idx", "anim_timer", "combo_step", "combo_reset_timer",
+    "attack_buffer", "attack_move_timer", "dash_timer", "dash_charges",
+    "dash_cooldowns", "dash_started_grounded", "pbomb_pause_timer",
+    "skill_cooldowns", "loop_counter", "last_shot_frame", "swap_timer",
+    "visible", "cam_x", "cam_y",
+)
+
+
+def capture_player_editor_isolation(player):
+    if not actor_editor_motion_locked(player, player):
+        return None
+    return {
+        name: copy.deepcopy(getattr(player, name))
+        for name in _PLAYER_EDITOR_ISOLATION_ATTRS
+        if hasattr(player, name)
+    }
+
+
+def restore_player_editor_isolation(player, snapshot):
+    if not snapshot:
+        return
+    for name, value in snapshot.items():
+        setattr(player, name, value)
+
+
+def clamp_quick_inspector_rect(rect, play_w, play_h):
+    max_x = max(8, play_w - rect.w - 8)
+    max_y = max(TOP_UI_HEIGHT + 8, play_h - rect.h - 8)
+    rect.x = max(8, min(rect.x, max_x))
+    rect.y = max(TOP_UI_HEIGHT + 8, min(rect.y, max_y))
+    return rect
+
+
+def quick_inspector_header_rect(state):
+    panel = state["rect"]
+    return pygame.Rect(panel.x, panel.y, panel.w, QUICK_INSPECTOR_HEADER_HEIGHT)
+
+
+def begin_quick_inspector_drag(player, point):
+    state = getattr(player, "quick_inspector", None)
+    if not state or state.get("dropdown_open"):
+        return None
+    if not quick_inspector_header_rect(state).collidepoint(point):
+        return None
+    return {
+        "offset": (state["rect"].x - point[0], state["rect"].y - point[1]),
+        "start": tuple(point),
+        "dragging": False,
+    }
+
+
+def update_quick_inspector_drag(player, drag, point, play_w, play_h):
+    state = getattr(player, "quick_inspector", None)
+    if not state or not drag:
+        return False
+    if not drag["dragging"]:
+        dx = point[0] - drag["start"][0]
+        dy = point[1] - drag["start"][1]
+        if math.hypot(dx, dy) <= VIEWPORT_CLICK_THRESHOLD:
+            return False
+        drag["dragging"] = True
+    state["rect"].topleft = (
+        point[0] + drag["offset"][0], point[1] + drag["offset"][1],
+    )
+    clamp_quick_inspector_rect(state["rect"], play_w, play_h)
+    state["manual_position"] = True
+    player.quick_inspector_manual_rect = state["rect"].copy()
+    return True
+
+
+def quick_inspector_scroll_dropdown(state, tags, delta):
+    visible = min(QUICK_INSPECTOR_DROPDOWN_ROWS, len(tags))
+    maximum = max(0, len(tags) - visible)
+    state["dropdown_scroll"] = max(
+        0, min(maximum, int(state.get("dropdown_scroll", 0)) + int(delta)),
+    )
+    return state["dropdown_scroll"]
+
+
+def quick_inspector_reveal_selected(state, tags):
+    if not tags or state.get("selected_tag") not in tags:
+        state["dropdown_scroll"] = 0
+        return 0
+    selected = tags.index(state["selected_tag"])
+    first = int(state.get("dropdown_scroll", 0))
+    visible = min(QUICK_INSPECTOR_DROPDOWN_ROWS, len(tags))
+    if selected < first:
+        first = selected
+    elif selected >= first + visible:
+        first = selected - visible + 1
+    state["dropdown_scroll"] = max(0, min(first, max(0, len(tags) - visible)))
+    return state["dropdown_scroll"]
+
+
+def quick_inspector_keyboard(state, tags, key):
+    if not state or not state.get("dropdown_open") or not tags:
+        return False
+    current = tags.index(state["selected_tag"]) if state.get("selected_tag") in tags else 0
+    if key == pygame.K_UP:
+        current -= 1
+    elif key == pygame.K_DOWN:
+        current += 1
+    elif key == pygame.K_PAGEUP:
+        current -= QUICK_INSPECTOR_DROPDOWN_ROWS
+    elif key == pygame.K_PAGEDOWN:
+        current += QUICK_INSPECTOR_DROPDOWN_ROWS
+    elif key == pygame.K_HOME:
+        current = 0
+    elif key == pygame.K_END:
+        current = len(tags) - 1
+    else:
+        return False
+    state["selected_tag"] = tags[max(0, min(len(tags) - 1, current))]
+    quick_inspector_reveal_selected(state, tags)
+    return True
+
+
+def handle_quick_inspector_wheel(player, point, wheel_y):
+    state = getattr(player, "quick_inspector", None)
+    if not (state and state.get("dropdown_open")):
+        return False
+    # An open combo owns wheel input. This also covers the first frame after the
+    # combo click, before draw_quick_inspector has produced dropdown_rect.
+    quick_inspector_scroll_dropdown(
+        state, quick_inspector_tags(player, state.get("target")), -wheel_y,
+    )
+    return True
+
+
+def quick_inspector_wheel_delta(event):
+    """Normalize pygame 2 wheel events and legacy Windows button 4/5 events."""
+    if event.type == pygame.MOUSEWHEEL:
+        return int(getattr(event, "y", 0))
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if getattr(event, "button", None) == 4:
+            return 1
+        if getattr(event, "button", None) == 5:
+            return -1
+    return None
+
+
+def player_preview_blocks_gameplay_key(player, key):
+    if not bool(getattr(player, "forced_animation_active", False)):
+        return False
+    gameplay_keys = set((getattr(player, "key_map", {}) or {}).values())
+    gameplay_keys.update({
+        pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT,
+        pygame.K_SPACE,
+    })
+    return key in gameplay_keys
+
+
+def _actor_profile(player, actor):
+    if actor is player:
+        return player.profiles[0] if getattr(player, "profiles", None) else None
+    return getattr(actor, "profile", None)
+
+
+def _actor_kind(player, actor):
+    if actor is player:
+        return "player"
+    return "prop" if bool(getattr(actor, "is_prop", False)) else "npc"
+
+
+def quick_inspector_target_exists(player, actor):
+    if actor is player:
+        return bool(getattr(player, "visible", True))
+    return actor in (
+        list(getattr(player, "ai_list", []) or [])
+        + list(getattr(player, "prop_list", []) or [])
+    )
+
+
+def actor_render_animation(player, actor):
+    """Return the visual-only preview frame without mutating gameplay animation state."""
+    if bool(getattr(actor, "forced_animation_active", False)):
+        sequence = list(getattr(actor, "forced_animation_sequence", []) or [])
+        sequence_index = int(getattr(actor, "forced_animation_sequence_index", 0))
+        if 0 <= sequence_index < len(sequence):
+            source_index, _tag_name = sequence[sequence_index]
+            return source_index, int(getattr(actor, "forced_animation_frame_idx", 0))
+    active = getattr(actor, "active_tag_info", None)
+    if active:
+        return active[0], int(getattr(actor, "frame_idx", 0))
+    profile = _actor_profile(player, actor)
+    source_index = getattr(profile, "source_idx", 0) if profile is not None else 0
+    return source_index, int(getattr(actor, "frame_idx", 0))
+
+
+def actor_visual_screen_rect(player, actor, play_w, play_h, cam_x=None, cam_y=None):
+    """Match draw_sprite's transformed frame bounds for viewport picking."""
+    if actor is None or not bool(getattr(actor, "visible", True)):
+        return None
+    source_index, frame_index = actor_render_animation(player, actor)
+    sources = getattr(player, "sources", [])
+    if not isinstance(source_index, int) or not 0 <= source_index < len(sources):
+        return None
+    source = sources[source_index]
+    if not getattr(source, "frames", None):
+        return None
+    facing_right = bool(getattr(actor, "facing_right", True))
+    scaled = source.get_frame(frame_index, player.zoom, facing_right)
+    if scaled is None:
+        return None
+    frame = source.frames[min(max(0, frame_index), len(source.frames) - 1)]
+    ground_offset = entity_ground_alignment_offset(player, actor, source_index)
+    offset_x = frame["ox"] * player.zoom
+    offset_y = (frame["oy"] + ground_offset) * player.zoom
+    if not facing_right:
+        offset_x = -offset_x - scaled.get_width()
+    drawn_camera = getattr(player, "last_draw_camera", (player.cam_x, player.cam_y))
+    camera_x = drawn_camera[0] if cam_x is None else cam_x
+    camera_y = drawn_camera[1] if cam_y is None else cam_y
+    center_x, center_y = play_w // 2, play_h // 2
+    return pygame.Rect(
+        int(center_x + (actor.x - camera_x) * player.zoom + offset_x),
+        int(center_y + (actor.y - camera_y) * player.zoom + offset_y),
+        scaled.get_width(), scaled.get_height(),
+    )
+
+
+def viewport_actor_draw_order(player):
+    below, foreground = split_actor_render_layers(player)
+    actors = [actor for actor in below if actor in getattr(player, "ai_list", []) or actor in getattr(player, "prop_list", [])]
+    if bool(getattr(player, "visible", True)):
+        actors.append(player)
+    actors.extend(
+        actor for actor in foreground
+        if actor in getattr(player, "ai_list", []) or actor in getattr(player, "prop_list", [])
+    )
+    return [actor for actor in actors if bool(getattr(actor, "visible", True))]
+
+
+def viewport_actor_at(player, point, play_w, play_h):
+    for actor in reversed(viewport_actor_draw_order(player)):
+        rect = actor_visual_screen_rect(player, actor, play_w, play_h)
+        if rect is not None and rect.collidepoint(point):
+            return actor
+    return None
+
+
+def select_runtime_actor(player, actor):
+    row = next(
+        (row for row in build_scene_actor_rows(player) if row.get("entity") is actor),
+        None,
+    )
+    return bool(row is not None and select_scene_actor(player, row["key"]))
+
+
+def finish_viewport_left_input(player, state, release_pos, play_w, play_h):
+    if state is None:
+        return "none"
+    if end_viewport_object_drag(player, state):
+        return "drag"
+    target = state.get("target")
+    if target is not None and quick_inspector_target_exists(player, target):
+        select_runtime_actor(player, target)
+        return "select"
+    if release_pos[0] < play_w and release_pos[1] >= TOP_UI_HEIGHT:
+        close_quick_inspector(player)
+        return "empty"
+    return "none"
+
+
+def finish_viewport_right_input(player, state, release_pos, play_w, play_h):
+    if not state or state.get("dragging"):
+        return None
+    if release_pos[0] >= play_w or release_pos[1] < TOP_UI_HEIGHT:
+        return None
+    target = viewport_actor_at(player, release_pos, play_w, play_h)
+    return open_quick_inspector(player, target, play_w, play_h) if target is not None else None
+
+
+def quick_inspector_tags(player, actor):
+    profile = _actor_profile(player, actor)
+    source_index = getattr(profile, "source_idx", -1) if profile is not None else -1
+    if 0 <= source_index < len(getattr(player, "sources", [])):
+        return list(getattr(player.sources[source_index], "tag_list", []) or [])
+    return []
+
+
+def _mapping_sequence_for_tag(profile, source_index, tag_name, full_sequence):
+    if profile is None or not full_sequence:
+        return [[source_index, tag_name]]
+    mappings = getattr(profile, "mappings", {}) or {}
+    matching_action = next((
+        action for action, sequence in mappings.items()
+        if any(
+            isinstance(item, (list, tuple)) and len(item) >= 2
+            and item[0] == source_index and item[1] == tag_name
+            for item in (sequence or [])
+        )
+    ), None)
+    if matching_action and _combo_attack_number(matching_action) is not None:
+        combo = []
+        for action in _get_npc_combo_chain(profile):
+            combo.extend(list(mappings.get(action, []) or []))
+        if combo:
+            return combo
+    sequence = list(mappings.get(matching_action, []) or []) if matching_action else []
+    return sequence or [[source_index, tag_name]]
+
+
+def stop_forced_animation_preview(actor):
+    if actor is None:
+        return
+    actor.forced_animation_active = False
+    actor.forced_animation_sequence = []
+    actor.forced_animation_sequence_index = 0
+    actor.forced_animation_frame_idx = 0
+    actor.forced_animation_timer = 0.0
+    actor.forced_animation_repeat = False
+
+
+def start_forced_animation_preview(player, actor, tag_name, full_sequence=False, repeat=False):
+    profile = _actor_profile(player, actor)
+    source_index = getattr(profile, "source_idx", -1) if profile is not None else -1
+    sources = getattr(player, "sources", [])
+    if not 0 <= source_index < len(sources) or tag_name not in getattr(sources[source_index], "tags", {}):
+        return False
+    sequence = _mapping_sequence_for_tag(profile, source_index, tag_name, full_sequence)
+    sequence = [
+        list(item) for item in sequence
+        if isinstance(item, (list, tuple)) and len(item) >= 2
+        and isinstance(item[0], int) and 0 <= item[0] < len(sources)
+        and item[1] in getattr(sources[item[0]], "tags", {})
+    ]
+    if not sequence:
+        return False
+    first_source, first_tag = sequence[0]
+    start, _end = sources[first_source].tags[first_tag]
+    actor.forced_animation_active = True
+    actor.forced_animation_sequence = sequence
+    actor.forced_animation_sequence_index = 0
+    actor.forced_animation_frame_idx = start
+    actor.forced_animation_timer = 0.0
+    actor.forced_animation_mode = "sequence" if full_sequence else "tag"
+    actor.forced_animation_repeat = bool(repeat)
+    return True
+
+
+def update_forced_animation_preview(player, actor, dt):
+    if not bool(getattr(actor, "forced_animation_active", False)):
+        return False
+    sequence = list(getattr(actor, "forced_animation_sequence", []) or [])
+    sequence_index = int(getattr(actor, "forced_animation_sequence_index", 0))
+    if not 0 <= sequence_index < len(sequence):
+        stop_forced_animation_preview(actor)
+        return False
+    source_index, tag_name = sequence[sequence_index]
+    if not 0 <= source_index < len(player.sources):
+        stop_forced_animation_preview(actor)
+        return False
+    source = player.sources[source_index]
+    tag_range = getattr(source, "tags", {}).get(tag_name)
+    if not tag_range or not getattr(source, "frames", None):
+        stop_forced_animation_preview(actor)
+        return False
+    start, end = tag_range
+    frame_index = min(max(int(getattr(actor, "forced_animation_frame_idx", start)), start), end)
+    actor.forced_animation_timer = float(getattr(actor, "forced_animation_timer", 0.0)) + max(0.0, dt)
+    duration = max(1.0, _finite_number(source.frames[frame_index].get("duration"), 100.0))
+    while actor.forced_animation_timer >= duration:
+        actor.forced_animation_timer -= duration
+        frame_index += 1
+        if frame_index > end:
+            sequence_index += 1
+            if sequence_index >= len(sequence):
+                if bool(getattr(actor, "forced_animation_repeat", False)):
+                    sequence_index = 0
+                else:
+                    stop_forced_animation_preview(actor)
+                    return False
+            source_index, tag_name = sequence[sequence_index]
+            source = player.sources[source_index]
+            start, end = source.tags[tag_name]
+            frame_index = start
+        duration = max(1.0, _finite_number(source.frames[frame_index].get("duration"), 100.0))
+    actor.forced_animation_sequence_index = sequence_index
+    actor.forced_animation_frame_idx = frame_index
+    return True
+
+
+def quick_inspector_content_layout(kind):
+    """Return vertical control offsets and content-derived panel height."""
+    layout = {"tag": 76, "scope": 112, "repeat": 148, "play": 184}
+    y = layout["play"] + 39
+    if kind == "player":
+        layout["player_action"] = y
+        y += 39
+    else:
+        layout["spawn"] = y
+        y += 36
+        layout["terminal"] = y
+        y += 39
+    layout["details"] = y
+    layout["height"] = y + 28 + QUICK_INSPECTOR_BOTTOM_PADDING
+    return layout
+
+
+def quick_inspector_panel_rect(anchor_rect, play_w, play_h, kind):
+    height = quick_inspector_content_layout(kind)["height"]
+    x = anchor_rect.right + 12
+    if x + QUICK_INSPECTOR_WIDTH > play_w - 8:
+        x = anchor_rect.left - QUICK_INSPECTOR_WIDTH - 12
+    return clamp_quick_inspector_rect(
+        pygame.Rect(x, anchor_rect.top, QUICK_INSPECTOR_WIDTH, height),
+        play_w, play_h,
+    )
+
+
+def open_quick_inspector(player, actor, play_w, play_h):
+    if not quick_inspector_target_exists(player, actor):
+        return None
+    anchor = actor_visual_screen_rect(player, actor, play_w, play_h)
+    if anchor is None:
+        return None
+    previous = getattr(player, "quick_inspector", None)
+    if previous and previous.get("target") is not actor:
+        stop_forced_animation_preview(previous.get("target"))
+    tags = quick_inspector_tags(player, actor)
+    options = getattr(player, "quick_inspector_last_options", {}) or {}
+    manual_rect = getattr(player, "quick_inspector_manual_rect", None)
+    kind = _actor_kind(player, actor)
+    if isinstance(manual_rect, pygame.Rect):
+        panel_rect = manual_rect.copy()
+        panel_rect.size = (QUICK_INSPECTOR_WIDTH, quick_inspector_content_layout(kind)["height"])
+        clamp_quick_inspector_rect(panel_rect, play_w, play_h)
+        player.quick_inspector_manual_rect = panel_rect.copy()
+    else:
+        panel_rect = quick_inspector_panel_rect(anchor, play_w, play_h, kind)
+    state = {
+        "target": actor,
+        "kind": kind,
+        "rect": panel_rect,
+        "selected_tag": tags[0] if tags else None,
+        "full_sequence": bool(options.get("full_sequence", False)),
+        "repeat_preview": bool(options.get("repeat_preview", False)),
+        "dropdown_open": False,
+        "dropdown_scroll": 0,
+        "dropdown_rect": None,
+        "combo_rect": None,
+        "manual_position": isinstance(manual_rect, pygame.Rect),
+    }
+    player.quick_inspector = state
+    row = next((row for row in build_scene_actor_rows(player) if row.get("entity") is actor), None)
+    if row is not None:
+        select_scene_actor(player, row["key"])
+    return state
+
+
+def close_quick_inspector(player):
+    state = getattr(player, "quick_inspector", None)
+    if state and state.get("target") is not None:
+        stop_forced_animation_preview(state["target"])
+    player.quick_inspector = None
+
+
+def despawn_runtime_actor(player, actor):
+    if actor in getattr(player, "ai_list", []):
+        stop_forced_animation_preview(actor)
+        player.ai_list.remove(actor)
+        if not bool(getattr(actor, "is_dead", False)):
+            player.target_ai_count = max(0, player.target_ai_count - 1)
+        return True
+    if actor in getattr(player, "prop_list", []):
+        stop_forced_animation_preview(actor)
+        player.prop_list.remove(actor)
+        return True
+    return False
+
+
+def reset_player_position(player):
+    """Return the player to the existing scene start without resetting gameplay data."""
+    if not hasattr(player, "spawn_x") or not hasattr(player, "spawn_y"):
+        return False
+    player.x = player.spawn_x
+    player.y = player.spawn_y
+    player.vx = 0
+    player.vy = 0
+    return True
+
+
+def _quick_button(surface, font, rect, label, controls, action, value=None,
+                  enabled=True, color=(59, 130, 246), tooltip_key=None):
+    fill = color if enabled else (62, 64, 70)
+    pygame.draw.rect(surface, fill, rect, border_radius=4)
+    text_color = (255, 255, 255) if enabled else (135, 138, 145)
+    draw_centered_label(surface, font, label, rect, text_color)
+    controls.append({
+        "rect": rect.copy(), "action": action, "value": value,
+        "enabled": enabled,
+    })
+    if tooltip_key:
+        register_tooltip(_QUICK_TOOLTIP_REGIONS, rect, tooltip_key)
+
+
+_QUICK_TOOLTIP_REGIONS = []
+
+
+def draw_quick_inspector(screen, player, play_w, play_h, fonts, tooltip_regions):
+    """Draw the single runtime inspector and return its click controls."""
+    state = getattr(player, "quick_inspector", None)
+    if not state:
+        return []
+    actor = state.get("target")
+    if not quick_inspector_target_exists(player, actor):
+        close_quick_inspector(player)
+        return []
+    global _QUICK_TOOLTIP_REGIONS
+    _QUICK_TOOLTIP_REGIONS = tooltip_regions
+    font_s, font_b = fonts
+    layout = quick_inspector_content_layout(state["kind"])
+    state["rect"].size = (QUICK_INSPECTOR_WIDTH, layout["height"])
+    panel = clamp_quick_inspector_rect(state["rect"], play_w, play_h)
+    if state.get("manual_position"):
+        player.quick_inspector_manual_rect = panel.copy()
+    controls = []
+    visual_rect = actor_visual_screen_rect(player, actor, play_w, play_h)
+    if visual_rect is not None:
+        pygame.draw.rect(screen, (255, 207, 64), visual_rect.inflate(6, 6), 2, border_radius=3)
+    shadow = panel.move(3, 4)
+    pygame.draw.rect(screen, (0, 0, 0, 110), shadow, border_radius=8)
+    pygame.draw.rect(screen, (30, 33, 42), panel, border_radius=8)
+    pygame.draw.rect(screen, (86, 138, 214), panel, 2, border_radius=8)
+
+    profile = _actor_profile(player, actor)
+    kind = state["kind"]
+    name = getattr(profile, "name", "PLAYER" if kind == "player" else kind.upper())
+    source_index = getattr(profile, "source_idx", -1) if profile is not None else -1
+    source_name = (
+        getattr(player.sources[source_index], "name", str(source_index))
+        if 0 <= source_index < len(player.sources) else tr("common.none")
+    )
+    title = ellipsize_ui_text(f"{tr('quick.title')} · {kind.upper()}", font_b, panel.w - 48)
+    screen.blit(font_b.render(title, True, (245, 247, 252)), (panel.x + 12, panel.y + 10))
+    close_rect = pygame.Rect(panel.right - 31, panel.y + 7, 23, 23)
+    _quick_button(screen, font_b, close_rect, "×", controls, "close", color=(120, 62, 68))
+    screen.blit(font_s.render(ellipsize_ui_text(str(name), font_s, panel.w - 24), True, (216, 224, 238)), (panel.x + 12, panel.y + 34))
+    screen.blit(font_s.render(ellipsize_ui_text(str(source_name), font_s, panel.w - 24), True, (142, 158, 182)), (panel.x + 12, panel.y + 51))
+    if bool(getattr(actor, "forced_animation_active", False)):
+        active_text = font_s.render(tr("quick.preview_active"), True, (83, 214, 148))
+        screen.blit(active_text, (panel.right - active_text.get_width() - 12, panel.y + 51))
+
+    tags = quick_inspector_tags(player, actor)
+    if state.get("selected_tag") not in tags:
+        state["selected_tag"] = tags[0] if tags else None
+    y = panel.y + layout["tag"]
+    screen.blit(font_s.render(tr("quick.tag"), True, (178, 188, 204)), (panel.x + 12, y + 5))
+    combo = pygame.Rect(panel.x + 65, y, panel.w - 77, 26)
+    pygame.draw.rect(screen, (46, 50, 61), combo, border_radius=4)
+    combo_text = state.get("selected_tag") or tr("quick.no_tags")
+    screen.blit(font_s.render(ellipsize_ui_text(combo_text, font_s, combo.w - 28), True, (235, 238, 244) if tags else (135, 138, 145)), (combo.x + 8, combo.y + 5))
+    screen.blit(font_s.render("▾", True, (200, 205, 214)), (combo.right - 18, combo.y + 4))
+    controls.append({"rect": combo, "action": "toggle_tags", "value": None, "enabled": bool(tags)})
+    state["combo_rect"] = combo.copy()
+
+    y = panel.y + layout["scope"]
+    current_rect = pygame.Rect(panel.x + 12, y, 137, 27)
+    sequence_rect = pygame.Rect(panel.x + 155, y, 147, 27)
+    _quick_button(screen, font_s, current_rect, tr("quick.current_tag"), controls, "mode", False,
+                  color=(59, 130, 246) if not state.get("full_sequence") else (65, 69, 80))
+    _quick_button(screen, font_s, sequence_rect, tr("quick.full_sequence"), controls, "mode", True,
+                  color=(59, 130, 246) if state.get("full_sequence") else (65, 69, 80))
+    y = panel.y + layout["repeat"]
+    once_rect = pygame.Rect(panel.x + 12, y, 137, 27)
+    repeat_rect = pygame.Rect(panel.x + 155, y, 147, 27)
+    _quick_button(screen, font_s, once_rect, tr("quick.once"), controls, "repeat_mode", False,
+                  color=(59, 130, 246) if not state.get("repeat_preview") else (65, 69, 80))
+    _quick_button(screen, font_s, repeat_rect, tr("quick.repeat"), controls, "repeat_mode", True,
+                  color=(59, 130, 246) if state.get("repeat_preview") else (65, 69, 80))
+    y = panel.y + layout["play"]
+    play_rect = pygame.Rect(panel.x + 12, y, 137, 28)
+    stop_rect = pygame.Rect(panel.x + 155, y, 147, 28)
+    _quick_button(screen, font_s, play_rect, tr("common.play"), controls, "play",
+                  enabled=bool(state.get("selected_tag")), color=(35, 151, 91), tooltip_key="tooltip.quick.play")
+    _quick_button(screen, font_s, stop_rect, tr("common.stop"), controls, "stop",
+                  enabled=bool(getattr(actor, "forced_animation_active", False)), color=(116, 84, 46), tooltip_key="tooltip.quick.stop")
+
+    if kind == "player":
+        reset_rect = pygame.Rect(panel.x + 12, panel.y + layout["player_action"], 290, 28)
+        _quick_button(
+            screen, font_s, reset_rect, tr("quick.reset_player_position"),
+            controls, "reset_player_position", color=(75, 92, 122),
+            tooltip_key="tooltip.quick.reset_player_position",
+        )
+    else:
+        y = panel.y + layout["spawn"]
+        spawn_label = tr("quick.place_another") if kind == "prop" else tr("quick.spawn_another")
+        spawn_rect = pygame.Rect(panel.x + 12, y, 290, 28)
+        _quick_button(screen, font_s, spawn_rect, spawn_label, controls, "spawn_another", color=(35, 151, 91))
+        y += 36
+        despawn_rect = pygame.Rect(panel.x + 12, y, 137, 28)
+        terminal_rect = pygame.Rect(panel.x + 155, y, 147, 28)
+        is_terminal = bool(getattr(actor, "is_dead", False) or getattr(actor, "is_corpse", False))
+        _quick_button(screen, font_s, despawn_rect, tr("quick.despawn"), controls, "despawn",
+                      color=(116, 84, 46), tooltip_key="tooltip.quick.remove")
+        terminal_label = tr("quick.destroy") if kind == "prop" else tr("quick.kill")
+        _quick_button(screen, font_s, terminal_rect, terminal_label, controls, "terminal",
+                      enabled=not is_terminal, color=(174, 48, 48))
+    details_rect = pygame.Rect(panel.x + 12, panel.y + layout["details"], 290, 28)
+    _quick_button(screen, font_s, details_rect, tr("common.details"), controls, "details",
+                  color=(75, 92, 122), tooltip_key="tooltip.quick.details")
+
+    state["dropdown_rect"] = None
+    if state.get("dropdown_open") and tags:
+        first = quick_inspector_scroll_dropdown(state, tags, 0)
+        visible_count = min(QUICK_INSPECTOR_DROPDOWN_ROWS, len(tags))
+        shown = tags[first:first + visible_count]
+        list_rect = pygame.Rect(
+            combo.x, combo.bottom + 2, combo.w,
+            len(shown) * QUICK_INSPECTOR_TAG_ROW_HEIGHT,
+        )
+        state["dropdown_rect"] = list_rect.copy()
+        pygame.draw.rect(screen, (24, 27, 34), list_rect, border_radius=4)
+        pygame.draw.rect(screen, (90, 104, 128), list_rect, 1, border_radius=4)
+        for index, tag in enumerate(shown):
+            row_rect = pygame.Rect(
+                list_rect.x + 1,
+                list_rect.y + index * QUICK_INSPECTOR_TAG_ROW_HEIGHT,
+                list_rect.w - 2, QUICK_INSPECTOR_TAG_ROW_HEIGHT,
+            )
+            if tag == state.get("selected_tag"):
+                pygame.draw.rect(screen, (59, 130, 246), row_rect)
+            screen.blit(font_s.render(ellipsize_ui_text(tag, font_s, row_rect.w - 12), True, (245, 247, 252)), (row_rect.x + 6, row_rect.y + 4))
+            controls.append({"rect": row_rect, "action": "select_tag", "value": tag, "enabled": True})
+        if len(tags) > visible_count:
+            track = pygame.Rect(list_rect.right - 6, list_rect.y + 2, 4, list_rect.h - 4)
+            thumb_height = max(14, int(track.h * visible_count / len(tags)))
+            maximum = len(tags) - visible_count
+            thumb_y = track.y + int((track.h - thumb_height) * first / max(1, maximum))
+            pygame.draw.rect(screen, (62, 68, 80), track, border_radius=2)
+            pygame.draw.rect(screen, (135, 153, 184), (track.x, thumb_y, track.w, thumb_height), border_radius=2)
+    return controls
+
+
+def handle_quick_inspector_action(player, control):
+    """Apply an inspector control and return an optional navigation request."""
+    state = getattr(player, "quick_inspector", None)
+    if not state or not control or not control.get("enabled", False):
+        return None
+    actor = state.get("target")
+    if not quick_inspector_target_exists(player, actor):
+        close_quick_inspector(player)
+        return None
+    action, value = control["action"], control.get("value")
+    if action == "close":
+        close_quick_inspector(player)
+    elif action == "toggle_tags":
+        state["dropdown_open"] = not state.get("dropdown_open", False)
+        if state["dropdown_open"]:
+            quick_inspector_reveal_selected(state, quick_inspector_tags(player, actor))
+    elif action == "select_tag":
+        state["selected_tag"] = value
+        state["dropdown_open"] = False
+    elif action == "mode":
+        state["full_sequence"] = bool(value)
+        player.quick_inspector_last_options["full_sequence"] = bool(value)
+    elif action == "repeat_mode":
+        state["repeat_preview"] = bool(value)
+        player.quick_inspector_last_options["repeat_preview"] = bool(value)
+    elif action == "play":
+        start_forced_animation_preview(
+            player, actor, state.get("selected_tag"),
+            state.get("full_sequence", False), state.get("repeat_preview", False),
+        )
+    elif action == "stop":
+        stop_forced_animation_preview(actor)
+    elif action == "reset_player_position" and actor is player:
+        reset_player_position(player)
+    elif action == "spawn_another":
+        profile = _actor_profile(player, actor)
+        profile_index = next((index for index, item in enumerate(player.profiles) if item is profile), -1)
+        spawned = (
+            player.spawn_prop_profile(profile_index)
+            if state["kind"] == "prop" else player.spawn_npc_profile(profile_index)
+        )
+        if spawned is not None:
+            spawned.x, spawned.y = actor.x + 50, actor.y
+            spawned.spawn_x, spawned.spawn_y = spawned.x, spawned.y
+            if bool(getattr(spawned, "intro_locked", False)):
+                spawned.intro_lock_x, spawned.intro_lock_y = spawned.x, spawned.y
+    elif action == "despawn":
+        if despawn_runtime_actor(player, actor):
+            player.quick_inspector = None
+    elif action == "terminal":
+        stop_forced_animation_preview(actor)
+        if state["kind"] == "prop":
+            player.trigger_prop_death(actor)
+        else:
+            player.trigger_npc_death(actor)
+        if not quick_inspector_target_exists(player, actor):
+            player.quick_inspector = None
+    elif action == "details":
+        navigation = "player_settings" if state["kind"] == "player" else "scene_settings"
+        close_quick_inspector(player)
+        return navigation
+    return None
 
 
 def bottom_key_guide_layout(player, sidebar_mode, play_width, screen_height, font):
@@ -6523,6 +7383,102 @@ class Particle:
                 self.vy *= -0.5; self.vx *= 0.8
 
 
+RECOVERY_FX_DURATION_MS = 480.0
+RECOVERY_FX_PARTICLE_COUNT = 12
+
+
+class RecoveryParticle(Particle):
+    """Short-lived, non-physical orbit particle attached to the Player."""
+    def __init__(self, owner, angle, radius, color):
+        self.owner = owner
+        self.angle = angle
+        self.radius = radius
+        self.angular_velocity = random.uniform(7.5, 10.5)
+        self.vertical_offset = random.uniform(-4.0, 12.0)
+        super().__init__(
+            getattr(owner, "x", 0.0),
+            getattr(owner, "y", 0.0) - 36.0,
+            0.0, 0.0, color, random.uniform(2.0, 4.0),
+            RECOVERY_FX_DURATION_MS,
+        )
+        self.is_recovery_fx = True
+
+    def update(self, dt, gravity, ground_y, platforms):
+        elapsed = max(0.0, _finite_number(dt, 0.0))
+        self.lifetime -= elapsed
+        progress = 1.0 - max(0.0, self.lifetime) / self.max_life
+        self.angle += self.angular_velocity * elapsed / 1000.0
+        owner_x = _finite_number(getattr(self.owner, "x", self.x), self.x)
+        owner_y = _finite_number(getattr(self.owner, "y", self.y), self.y)
+        current_radius = self.radius * (1.0 - progress * 0.35)
+        self.x = owner_x + math.cos(self.angle) * current_radius
+        self.y = (
+            owner_y - 34.0 + self.vertical_offset
+            + math.sin(self.angle) * 10.0
+            - progress * 32.0
+        )
+
+
+def spawn_player_recovery_fx(player):
+    """Replace the prior recovery burst so repeated F9 presses stay bounded."""
+    if player is None or not hasattr(player, "particles"):
+        return []
+    player.particles = [
+        particle for particle in (getattr(player, "particles", []) or [])
+        if not bool(getattr(particle, "is_recovery_fx", False))
+    ]
+    colors = ((89, 255, 198), (105, 240, 222), (176, 255, 128))
+    particles = [
+        RecoveryParticle(
+            player,
+            (math.tau * index / RECOVERY_FX_PARTICLE_COUNT),
+            random.uniform(18.0, 32.0),
+            colors[index % len(colors)],
+        )
+        for index in range(RECOVERY_FX_PARTICLE_COUNT)
+    ]
+    player.particles.extend(particles)
+    return particles
+
+
+def can_use_hp_recovery_shortcut(
+    player, active_input_attr=None, binding_key=None,
+):
+    """F9 is an app shortcut, disabled while UI input/modal state owns keys."""
+    return bool(
+        player is not None
+        and not active_input_attr
+        and not binding_key
+        and not getattr(player, "popup", None)
+    )
+
+
+def restore_player_hp(player):
+    """Restore only Player test state and spawn a bounded visual response."""
+    if player is None:
+        return False
+    maximum = max(1.0, _finite_number(getattr(player, "max_hp", 100), 100))
+    player.hp = maximum
+    for attribute in (
+        "hitstop_timer", "hitstun_timer", "hit_cooldown",
+        "invincible_timer", "invulnerability_timer",
+    ):
+        if hasattr(player, attribute):
+            setattr(player, attribute, 0)
+    for attribute in ("is_dead", "is_down", "downed"):
+        if hasattr(player, attribute):
+            setattr(player, attribute, False)
+    active_slot = str(getattr(player, "active_action_slot", "") or "")
+    if re.search(r"(?:hit|hurt|dead|death|down)", active_slot, re.IGNORECASE):
+        player.active_action_slot = None
+        player.active_tag_info = None
+        player.action_queue = []
+        player.action_end_frame = -1
+    player.scene_status_message = tr("status.hp_restored")
+    spawn_player_recovery_fx(player)
+    return True
+
+
 def spawn_ground_y(master, spawn_x):
     world_ground = _finite_number(
         getattr(master, "world_ground_y", 500.0), 500.0,
@@ -6641,6 +7597,9 @@ def _clear_npc_death_runtime_state(npc):
     npc.npc_attack_slot = None
     npc.npc_attack_elapsed = 0.0
     npc.npc_attack_duration = 0.0
+    npc.npc_attack_damage_windows = []
+    npc.npc_attack_active_start = 0.0
+    npc.npc_attack_active_end = 0.0
     npc.npc_attack_has_hit = False
     npc.npc_attack_cooldown = 0.0
     npc.npc_combo_actions = []
@@ -6658,6 +7617,10 @@ _COMBO_ACTION_RE = re.compile(r"^ComboAttack_(\d+)$", re.IGNORECASE)
 _COMBO_TAG_RE = re.compile(
     r"^ComboAttack_(\d+)(?:_(?:Ready|Loop|End))?$", re.IGNORECASE,
 )
+_NON_DAMAGE_ATTACK_PHASES = {
+    "ready", "windup", "prepare", "prep", "start",
+    "intro", "recover", "recovery", "end", "outro",
+}
 
 
 def _combo_attack_number(name, allow_tag_suffix=False):
@@ -6666,17 +7629,45 @@ def _combo_attack_number(name, allow_tag_suffix=False):
     return int(match.group(1)) if match else None
 
 
+def _attack_phase_tokens(tag_name):
+    camel_spaced = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", str(tag_name or ""))
+    return [
+        token.casefold()
+        for token in re.split(r"[^A-Za-z0-9]+", camel_spaced)
+        if token
+    ]
+
+
+def is_damage_attack_tag(tag_name):
+    """Classify a tag already mapped to an attack slot as damage-capable."""
+    tokens = _attack_phase_tokens(tag_name)
+    return bool(tokens) and not any(
+        token in _NON_DAMAGE_ATTACK_PHASES for token in tokens
+    )
+
+
+def _mapping_has_damage_tag(tags):
+    return any(
+        isinstance(mapping, (list, tuple))
+        and len(mapping) >= 2
+        and is_damage_attack_tag(mapping[1])
+        for mapping in (tags or [])
+    )
+
+
 def _detect_npc_combo_actions(profile_or_source):
     mappings = getattr(profile_or_source, "mappings", None)
     if isinstance(mappings, dict):
         numbers = {
             number for action, tags in mappings.items()
-            if tags and (number := _combo_attack_number(action)) is not None
+            if _mapping_has_damage_tag(tags)
+            and (number := _combo_attack_number(action)) is not None
         }
     else:
         numbers = {
             number for tag in getattr(profile_or_source, "tag_list", [])
-            if (number := _combo_attack_number(tag, allow_tag_suffix=True)) is not None
+            if is_damage_attack_tag(tag)
+            and (number := _combo_attack_number(tag, allow_tag_suffix=True)) is not None
         }
     chain = []
     number = 1
@@ -6690,8 +7681,9 @@ def _get_npc_combo_chain(profile):
     return _detect_npc_combo_actions(profile)
 
 
-NPC_ATTACK_ACTIVE_START = 0.35
-NPC_ATTACK_ACTIVE_END = 0.60
+NPC_ATTACK_ACTIVE_START_RATIO = 0.0
+NPC_ATTACK_ACTIVE_END_RATIO = 0.25
+NPC_ATTACK_MIN_ACTIVE_MS = 40.0
 NPC_ATTACK_RECOVERY_MS = 650.0
 NPC_ATTACK_FALLBACK_DURATION_MS = 450.0
 NPC_ATTACK_FALLBACK_GRACE_MS = 250.0
@@ -6724,6 +7716,84 @@ def _npc_action_duration_ms(npc, slot):
     return total if total > 0 else NPC_ATTACK_FALLBACK_DURATION_MS
 
 
+def _source_tag_duration_ms(source, tag_name):
+    tag_range = getattr(source, "tags", {}).get(tag_name)
+    frames = getattr(source, "frames", [])
+    if not tag_range or not frames:
+        return 0.0
+    start, end = tag_range
+    return sum(
+        max(1.0, _finite_number(frames[index].get("duration"), 100.0))
+        for index in range(max(0, start), min(end, len(frames) - 1) + 1)
+    )
+
+
+def _npc_attack_damage_windows_ms(npc, slot):
+    """Return a short early window for each mapped damage-capable tag."""
+    master = getattr(npc, "master", None)
+    sources = getattr(master, "sources", [])
+    mappings = getattr(getattr(npc, "profile", None), "mappings", {})
+    elapsed = 0.0
+    windows = []
+    for mapping in mappings.get(slot, []):
+        if not isinstance(mapping, (list, tuple)) or len(mapping) < 2:
+            continue
+        source_index, tag_name = mapping[0], mapping[1]
+        if not isinstance(source_index, int) or not 0 <= source_index < len(sources):
+            continue
+        duration = _source_tag_duration_ms(sources[source_index], tag_name)
+        if duration <= 0:
+            continue
+        if is_damage_attack_tag(tag_name):
+            active_duration = min(
+                duration,
+                max(
+                    NPC_ATTACK_MIN_ACTIVE_MS,
+                    duration * NPC_ATTACK_ACTIVE_END_RATIO,
+                ),
+            )
+            windows.append({
+                "source_index": source_index,
+                "tag_name": tag_name,
+                "start": elapsed + duration * NPC_ATTACK_ACTIVE_START_RATIO,
+                "end": elapsed + active_duration,
+            })
+        elapsed += duration
+    return windows
+
+
+def _npc_attack_damage_window_ms(npc, slot, fallback_duration=None):
+    """Return aggregate bounds for diagnostics and legacy state consumers."""
+    windows = _npc_attack_damage_windows_ms(npc, slot)
+    if windows:
+        return windows[0]["start"], windows[-1]["end"]
+    duration = max(
+        1.0,
+        _finite_number(fallback_duration, NPC_ATTACK_FALLBACK_DURATION_MS),
+    )
+    active_duration = min(
+        duration,
+        max(
+            NPC_ATTACK_MIN_ACTIVE_MS,
+            duration * NPC_ATTACK_ACTIVE_END_RATIO,
+        ),
+    )
+    return (
+        duration * NPC_ATTACK_ACTIVE_START_RATIO,
+        active_duration,
+    )
+
+
+def _set_npc_attack_timing(npc, slot):
+    duration = _npc_action_duration_ms(npc, slot)
+    damage_windows = _npc_attack_damage_windows_ms(npc, slot)
+    active_start, active_end = _npc_attack_damage_window_ms(npc, slot, duration)
+    npc.npc_attack_duration = duration
+    npc.npc_attack_damage_windows = damage_windows
+    npc.npc_attack_active_start = active_start
+    npc.npc_attack_active_end = active_end
+
+
 def _can_npc_start_attack(npc):
     return (
         npc is not None
@@ -6749,7 +7819,7 @@ def _start_npc_attack(npc, target_delta):
     npc.npc_attack_slot = slot
     npc.npc_attack_facing_right = bool(npc.facing_right)
     npc.npc_attack_elapsed = 0.0
-    npc.npc_attack_duration = _npc_action_duration_ms(npc, slot)
+    _set_npc_attack_timing(npc, slot)
     npc.npc_attack_has_hit = False
     npc.npc_attack_instance_id = getattr(npc, "npc_attack_instance_id", 0) + 1
     npc.decision = "ATTACK"
@@ -6768,7 +7838,7 @@ def _advance_npc_combo_segment(npc):
     npc.npc_combo_index = next_index
     npc.npc_attack_slot = slot
     npc.npc_attack_elapsed = 0.0
-    npc.npc_attack_duration = _npc_action_duration_ms(npc, slot)
+    _set_npc_attack_timing(npc, slot)
     npc.npc_attack_has_hit = False
     return True
 
@@ -6782,6 +7852,9 @@ def _finish_npc_attack(npc):
     npc.npc_combo_index = 0
     npc.npc_attack_elapsed = 0.0
     npc.npc_attack_duration = 0.0
+    npc.npc_attack_damage_windows = []
+    npc.npc_attack_active_start = 0.0
+    npc.npc_attack_active_end = 0.0
     npc.npc_attack_cooldown = NPC_ATTACK_RECOVERY_MS
     npc.decision = "IDLE"
     return True
@@ -6791,6 +7864,12 @@ def npc_attack_hitbox(npc):
     """Return the authored active hit slice, or a conservative front-facing fallback."""
     facing_right = bool(getattr(npc, "npc_attack_facing_right", getattr(npc, "facing_right", True)))
     active_info = getattr(npc, "active_tag_info", None)
+    if (
+        active_info
+        and len(active_info) >= 2
+        and not is_damage_attack_tag(active_info[1])
+    ):
+        return None
     master = getattr(npc, "master", None)
     sources = getattr(master, "sources", [])
     if active_info and 0 <= active_info[0] < len(sources):
@@ -6840,11 +7919,14 @@ def player_hurtbox(player):
 
 
 def _apply_npc_attack_hit(npc):
+    if bool(getattr(npc, "forced_animation_active", False)):
+        return False
     if getattr(npc, "npc_attack_has_hit", False):
         return False
     player = getattr(npc, "master", None)
     hurtbox = player_hurtbox(player)
-    if hurtbox is None or not npc_attack_hitbox(npc).colliderect(hurtbox):
+    attack_hitbox = npc_attack_hitbox(npc)
+    if hurtbox is None or attack_hitbox is None or not attack_hitbox.colliderect(hurtbox):
         return False
     if not hasattr(player, "hp") or getattr(player, "hp", 0) <= 0:
         return False
@@ -6881,9 +7963,40 @@ def _update_npc_attack_state(npc, dt):
     )
     current = previous + elapsed_dt
     npc.npc_attack_elapsed = current
-    active_start = duration * NPC_ATTACK_ACTIVE_START
-    active_end = duration * NPC_ATTACK_ACTIVE_END
-    if previous <= active_end and current >= active_start:
+    damage_windows = getattr(npc, "npc_attack_damage_windows", None)
+    active_info = getattr(npc, "active_tag_info", None)
+    active_window = None
+    if damage_windows and active_info and len(active_info) >= 2:
+        active_window = next(
+            (
+                window for window in damage_windows
+                if window["source_index"] == active_info[0]
+                and window["tag_name"] == active_info[1]
+            ),
+            None,
+        )
+    if active_window is None and not damage_windows:
+        active_window = {
+            "start": _finite_number(
+                getattr(npc, "npc_attack_active_start", None),
+                duration * NPC_ATTACK_ACTIVE_START_RATIO,
+            ),
+            "end": _finite_number(
+                getattr(npc, "npc_attack_active_end", None),
+                min(
+                    duration,
+                    max(
+                        NPC_ATTACK_MIN_ACTIVE_MS,
+                        duration * NPC_ATTACK_ACTIVE_END_RATIO,
+                    ),
+                ),
+            ),
+        }
+    if (
+        active_window is not None
+        and previous <= active_window["end"]
+        and current >= active_window["start"]
+    ):
         _apply_npc_attack_hit(npc)
     action_is_active = (
         getattr(npc, "active_action_slot", None) == getattr(npc, "npc_attack_slot", None)
@@ -7084,8 +8197,9 @@ class AseAI:
         self.x, self.y = self.spawn_x, self.spawn_y; self.vx = self.vy = 0; self.grounded = True; self.facing_right = random.choice([True, False]); self.frame_idx = 0; self.anim_timer = 0; self.active_tag_info = None; self.action_queue = []; self.action_end_frame = -1; self.ai_timer = random.randint(30, 90); self.decision = "IDLE"; self.swap_timer = 0; self.visible = True; self.active_action_slot = None
         self.is_temp = is_temp; self.is_partner = bool(is_partner); self.attack_buffer = 0; self.combo_step = 0
         self.is_prop = is_prop; self.hit_cooldown = 0; self.is_dead = False; self.is_corpse = False; self.corpse_looping = False; self.corpse_anim_step = 1; self.last_hit_frame_idx = -1; self.pending_execution = 0
-        self.npc_attack_locked = False; self.npc_attack_cooldown = 0.0; self.npc_attack_slot = None; self.npc_attack_facing_right = self.facing_right; self.npc_attack_elapsed = 0.0; self.npc_attack_duration = 0.0; self.npc_attack_has_hit = False; self.npc_attack_instance_id = 0; self.npc_combo_actions = []; self.npc_combo_index = 0
+        self.npc_attack_locked = False; self.npc_attack_cooldown = 0.0; self.npc_attack_slot = None; self.npc_attack_facing_right = self.facing_right; self.npc_attack_elapsed = 0.0; self.npc_attack_duration = 0.0; self.npc_attack_damage_windows = []; self.npc_attack_active_start = 0.0; self.npc_attack_active_end = 0.0; self.npc_attack_has_hit = False; self.npc_attack_instance_id = 0; self.npc_combo_actions = []; self.npc_combo_index = 0
         self.intro_locked = False; self.intro_lock_x = self.x; self.intro_lock_y = self.y; self.intro_elapsed = 0.0; self.intro_duration = 0.0
+        self.forced_animation_active = False; self.forced_animation_sequence = []; self.forced_animation_sequence_index = 0; self.forced_animation_frame_idx = 0; self.forced_animation_timer = 0.0; self.forced_animation_mode = "tag"; self.forced_animation_repeat = False
         if is_prop:
             self.prop_state = 0 # 0: IDLE, 1: Break1, 2: Break2
             self.stage_hp = 3
@@ -7099,6 +8213,8 @@ class AseAI:
                 _start_intro_lock(self)
     def update(self, ground_y, dt):
         if self.is_partner:
+            return
+        if actor_editor_motion_locked(self.master, self):
             return
         if self.is_corpse:
             self.vx = 0; self.decision = "DEAD"
@@ -7291,14 +8407,19 @@ class AsepritePlayer:
         self.parallax_offset_edit = None
         self.parallax_history_status_key = ""
         self.performance_monitor = None
+        self.quick_inspector = None
+        self.quick_inspector_manual_rect = None
+        self.quick_inspector_last_options = {"full_sequence": False, "repeat_preview": False}
+        self.viewport_object_drag = None
         self.selected_scene_actor_key = None
         self.scene_object_filter = SCENE_FILTER_ALL
         self.scene_status_message = ""
         self.resource_status_message = ""
         self.npc_intro_replay_status = ""
         self.solid_boxes = []
-        self.frame_idx = 0; self.anim_timer = 0; self.combo_step = 0; self.combo_reset_timer = 0; self.attack_buffer = 0; self.active_action_slot = None; self.active_tag_info = None; self.action_queue = []; self.action_end_frame = -1; self.dash_charges = 2; self.dash_cooldowns = [0, 0]; self.dash_timer = 0; self.dash_started_grounded = False; self.attack_move_timer = 0; self.ai_list = []; self.partner_profiles = []; self.partner_list = []; self.temp_ai_list = []; self.prop_list = []; self.target_ai_count = 0; self.npc_max_hp = 10; self.last_npc_death_result = None; self.swap_timer = 0; self.visible = True; self.playback_speed = 1.0; self.is_paused = False; self.step_forward = False; self.show_hitboxes = True; self.target_w, self.target_h = 640, 360; self.show_viewport = True; self.shake_timer = 0; self.shake_intensity = 0; self.shake_enabled = True; self.base_shake = 0.2; self.debris_force = 0.3; self.afterimages = []; self.particles = []; self.sparks = []; self.projectiles = []; self.last_shot_frame = -1; self.hitstop_timer = 0; self.damage_numbers = []; self.vfx_enabled = True; self.is_ranged_combo = False; self.ghost_timer = 0; self.platform_alpha = 150; self.edit_platforms = False; self.selected_plat = None; self.drag_offset = (0,0); self.drop_through_timer = 0
+        self.frame_idx = 0; self.anim_timer = 0; self.combo_step = 0; self.combo_reset_timer = 0; self.attack_buffer = 0; self.active_action_slot = None; self.active_tag_info = None; self.action_queue = []; self.action_end_frame = -1; self.forced_animation_active = False; self.forced_animation_sequence = []; self.forced_animation_sequence_index = 0; self.forced_animation_frame_idx = 0; self.forced_animation_timer = 0.0; self.forced_animation_mode = "tag"; self.dash_charges = 2; self.dash_cooldowns = [0, 0]; self.dash_timer = 0; self.dash_started_grounded = False; self.attack_move_timer = 0; self.ai_list = []; self.partner_profiles = []; self.partner_list = []; self.temp_ai_list = []; self.prop_list = []; self.target_ai_count = 0; self.npc_max_hp = 10; self.last_npc_death_result = None; self.swap_timer = 0; self.visible = True; self.playback_speed = 1.0; self.is_paused = False; self.step_forward = False; self.show_hitboxes = True; self.target_w, self.target_h = 640, 360; self.show_viewport = True; self.shake_timer = 0; self.shake_intensity = 0; self.shake_enabled = True; self.base_shake = 0.2; self.debris_force = 0.3; self.afterimages = []; self.particles = []; self.sparks = []; self.projectiles = []; self.last_shot_frame = -1; self.hitstop_timer = 0; self.damage_numbers = []; self.vfx_enabled = True; self.is_ranged_combo = False; self.ghost_timer = 0; self.platform_alpha = 150; self.edit_platforms = False; self.selected_plat = None; self.drag_offset = (0,0); self.drop_through_timer = 0
         self.hp = 100; self.max_hp = 100; self.skill_cooldowns = [0, 0, 0]
+        self.forced_animation_repeat = False
         if pygame.font.get_init():
             self.font_10 = create_ui_font(10)
             self.font_12 = create_ui_font(12)
@@ -7716,6 +8837,16 @@ class AsepritePlayer:
         self.ai_list.append(instance)
         if increase_target:
             self.target_ai_count += 1
+        return instance
+
+    def spawn_prop_profile(self, profile_index):
+        if not isinstance(profile_index, int) or not 0 <= profile_index < len(self.profiles):
+            return None
+        profile = self.profiles[profile_index]
+        if profile_kind(profile, profile_index) != "prop":
+            return None
+        instance = AseAI(self, profile, is_prop=True, hp=3)
+        self.prop_list.append(instance)
         return instance
 
     def remove_source_by_index(self, i):
@@ -8328,6 +9459,7 @@ class AsepritePlayer:
 
     def trigger_npc_death(self, ai):
         if ai.is_dead: return None
+        stop_forced_animation_preview(ai)
         _clear_npc_death_runtime_state(ai)
         _snap_npc_corpse_to_ground(ai)
         profile = ai.profile
@@ -8489,6 +9621,7 @@ class AsepritePlayer:
 
     def trigger_prop_death(self, ai):
         if ai.is_dead: return None
+        stop_forced_animation_preview(ai)
         dead_loop_mapping = self.valid_dead_loop_mapping(ai)
         if dead_loop_mapping:
             self.activate_corpse(ai, dead_loop_mapping, "DEAD_LOOP")
@@ -8519,6 +9652,8 @@ class AsepritePlayer:
         return branch
 
     def check_hits(self):
+        if bool(getattr(self, "forced_animation_active", False)):
+            return
         if not self.active_tag_info or self.active_tag_info[0] < 0 or self.active_tag_info[0] >= len(self.sources): return
         src = self.sources[self.active_tag_info[0]]
         hitboxes = []
@@ -8692,6 +9827,7 @@ class AsepritePlayer:
 
     def update(self, keys, ground_y, dt):
         original_dt = dt
+        player_editor_state = capture_player_editor_isolation(self)
         performance = self.performance_monitor
         if hasattr(self, "_btn_lock"):
             self._btn_lock -= 1
@@ -8710,6 +9846,10 @@ class AsepritePlayer:
         else:
             self.hitstop_slow_factor = 0.1
             
+        preview_dt = 0.0 if self.is_paused else dt
+        update_forced_animation_preview(self, self, preview_dt)
+        for preview_actor in self.ai_list + self.prop_list:
+            update_forced_animation_preview(self, preview_actor, preview_dt)
         self.check_hits()
         
         # Update particles and compact survivors in one pass.
@@ -8783,7 +9923,7 @@ class AsepritePlayer:
         if self.drop_through_timer > 0: self.drop_through_timer -= dt
         if self.shake_timer > 0: self.shake_timer -= dt / 16.6
         if getattr(self, 'swap_vfx_timer', 0) > 0: self.swap_vfx_timer -= dt
-        if self.vfx_enabled:
+        if self.vfx_enabled and player_editor_state is None:
             alive_afterimages = []
             for ai in self.afterimages:
                 ai['alpha'] -= 15 * (dt/16.6)
@@ -8794,7 +9934,7 @@ class AsepritePlayer:
                 self.ghost_timer += dt
                 if self.ghost_timer >= 30: 
                     self.ghost_timer = 0; s_idx = self.active_tag_info[0] if self.active_tag_info else 0; self.afterimages.append({'x': self.x, 'y': self.y, 's': s_idx, 'f': self.frame_idx, 'right': self.facing_right, 'alpha': 180})
-        if self.swap_timer > 0:
+        if self.swap_timer > 0 and player_editor_state is None:
             self.swap_timer -= dt
             if self.swap_timer <= 0: self.x, self.y = self.spawn_x, self.spawn_y; self.visible = True; self.trigger_action("Swap_Enter")
             return
@@ -8853,7 +9993,8 @@ class AsepritePlayer:
         # Ground dust belongs only to a dash that started and remains grounded.
         # This runs after collision/grounding so walking off a ledge cannot emit
         # one extra airborne dust particle from the previous frame's state.
-        emit_ground_dash_dust(self)
+        if player_editor_state is None:
+            emit_ground_dash_dust(self)
         
         if self.grounded and (self.active_action_slot == "JUMPATTACK" or self.active_action_slot == "POWERBOMB"):
             if self.active_tag_info: self.play_next_in_queue()
@@ -8886,7 +10027,10 @@ class AsepritePlayer:
                     if self.anim_timer >= dur:
                         self.frame_idx += 1; self.anim_timer = 0
                         if self.active_tag_info and self.frame_idx > self.action_end_frame:
-                            if target_info[1] == "Swap_Exit": self.visible = False; self.swap_timer = 500; self.active_tag_info = None; return
+                            if target_info[1] == "Swap_Exit":
+                                self.visible = False; self.swap_timer = 500; self.active_tag_info = None
+                                if player_editor_state is None:
+                                    return
                             is_skill = "SKILL" in str(self.active_action_slot)
                             is_loop = "(loop)" in target_info[1].lower()
                             is_fall = self.active_action_slot == "FALL"
@@ -8898,6 +10042,7 @@ class AsepritePlayer:
                             else: self.play_next_in_queue()
                         elif self.frame_idx > tr[1]: self.frame_idx = tr[0]
                 else: self.frame_idx = tr[0]
+        restore_player_editor_isolation(self, player_editor_state)
         actor_update_started = time.perf_counter_ns() if performance and performance.enabled else None
         for ai in self.ai_list:
             if not getattr(ai, "is_partner", False):
@@ -8925,7 +10070,7 @@ class AsepritePlayer:
         f = src.frames[min(max(0, f_idx), len(src.frames)-1)]; ox, oy = f['ox']*self.zoom, (f['oy'] + ground_offset)*self.zoom
         if not facing_right: ox = -ox - scaled.get_width()
         screen.blit(scaled, (int(cx + (x - cam_x)*self.zoom + ox), int(cy + (y - cam_y)*self.zoom + oy)))
-        if self.show_hitboxes:
+        if self.show_hitboxes and not bool(getattr(entity, "forced_animation_active", False)):
             has_hit_slice = False
             has_hurt_slice = False
             for name, keys in src.slices.items():
@@ -8983,7 +10128,7 @@ class AsepritePlayer:
     def draw(self, screen, play_w, play_h):
         if not hasattr(self, "solid_boxes"): self.solid_boxes = []
         performance = self.performance_monitor
-        cx, cy = play_w // 2, play_h // 2; off_x = random.uniform(-self.shake_intensity*self.base_shake, self.shake_intensity*self.base_shake) if self.shake_timer > 0 else 0; off_y = random.uniform(-self.shake_intensity*self.base_shake, self.shake_intensity*self.base_shake) if self.shake_timer > 0 else 0; cam_x, cam_y = self.cam_x + off_x, self.cam_y + off_y; gx, gy = cx - (cam_x % 100)*self.zoom, cy - (cam_y % 100)*self.zoom
+        cx, cy = play_w // 2, play_h // 2; off_x = random.uniform(-self.shake_intensity*self.base_shake, self.shake_intensity*self.base_shake) if self.shake_timer > 0 else 0; off_y = random.uniform(-self.shake_intensity*self.base_shake, self.shake_intensity*self.base_shake) if self.shake_timer > 0 else 0; cam_x, cam_y = self.cam_x + off_x, self.cam_y + off_y; self.last_draw_camera = (cam_x, cam_y); gx, gy = cx - (cam_x % 100)*self.zoom, cy - (cam_y % 100)*self.zoom
         for i in range(-10, 20): pygame.draw.line(screen, self.grid_color, (int(gx+i*100*self.zoom), 0), (int(gx+i*100*self.zoom), play_h), 1); pygame.draw.line(screen, self.grid_color, (0, int(gy+i*100*self.zoom)), (play_w, int(gy+i*100*self.zoom)), 1)
         background_update_started = time.perf_counter_ns() if performance and performance.enabled else None
         self.update_bg_cache()
@@ -9086,20 +10231,16 @@ class AsepritePlayer:
         below_player_actors, foreground_actors = split_actor_render_layers(self)
         for ai in below_player_actors:
             if ai.visible and not getattr(ai, "is_partner", False):
-                ai_s = (
-                    ai.active_tag_info[0]
-                    if ai.active_tag_info
-                    else ai.profile.source_idx
-                )
+                ai_s, ai_frame = actor_render_animation(self, ai)
                 self.draw_sprite(
-                    screen, ai.x, ai.y, ai_s, ai.frame_idx, ai.facing_right,
+                    screen, ai.x, ai.y, ai_s, ai_frame, ai.facing_right,
                     cam_x, cam_y, cx, cy, entity=ai,
                 )
         if self.visible:
-            cur_s = self.active_tag_info[0] if self.active_tag_info else 0
-            if not self.active_tag_info:
+            cur_s, player_frame = actor_render_animation(self, self)
+            if not self.active_tag_info and not self.forced_animation_active:
                 state = "WALK" if self.grounded and abs(self.vx) > 0.5 else ("IDLE" if self.grounded else ("JUMP" if self.vy < 0 else "FALL")); m = self.profiles[0].mappings.get(state, []) if self.profiles else []; cur_s = m[0][0] if m else 0
-            self.draw_sprite(screen, self.x, self.y, cur_s, self.frame_idx, self.facing_right, cam_x, cam_y, cx, cy, entity=self)
+            self.draw_sprite(screen, self.x, self.y, cur_s, player_frame, self.facing_right, cam_x, cam_y, cx, cy, entity=self)
             
             # --- SWAP VFX: Yellow Stroke (Outline) ---
             if getattr(self, "swap_vfx_timer", 0) > 0:
@@ -9128,7 +10269,7 @@ class AsepritePlayer:
 
         for ai in foreground_actors:
             if ai.visible and not getattr(ai, "is_partner", False):
-                ai_s = ai.active_tag_info[0] if ai.active_tag_info else ai.profile.source_idx; self.draw_sprite(screen, ai.x, ai.y, ai_s, ai.frame_idx, ai.facing_right, cam_x, cam_y, cx, cy, entity=ai)
+                ai_s, ai_frame = actor_render_animation(self, ai); self.draw_sprite(screen, ai.x, ai.y, ai_s, ai_frame, ai.facing_right, cam_x, cam_y, cx, cy, entity=ai)
                 
                 # Draw HP for NPCs (not props)
                 if (
@@ -9342,6 +10483,7 @@ def check_application():
                 len(example_resources) if frozen_runtime else None
             ),
             tk_patchlevel=tk_patchlevel,
+            runtime_icon_available=runtime_icon_path() is not None,
         ))
         return 0
     except Exception as e:
@@ -9547,6 +10689,8 @@ def format_performance_summary(monitor, heading="[PERFORMANCE SUMMARY]"):
 def main(profile_performance=False):
     log_debug(f"[SYSTEM] {APP_TITLE} {APP_VERSION} starting")
     pygame.init(); pygame.mixer.init()
+    set_windows_app_user_model_id()
+    set_runtime_window_icon()
     pygame.display.set_caption(app_window_title())
     initial_size = calculate_initial_window_size(current_desktop_size())
     screen = pygame.display.set_mode(initial_size, pygame.RESIZABLE | pygame.DOUBLEBUF | pygame.HWSURFACE, vsync=1)
@@ -9559,6 +10703,10 @@ def main(profile_performance=False):
     workspace_scroll = 0
     workspace_controls = []
     workspace_viewport = None
+    quick_inspector_controls = []
+    viewport_click = None
+    right_viewport_input = None
+    quick_inspector_drag = None
     while True:
         frame_started = performance.begin_frame()
         limiter_started = time.perf_counter_ns() if performance.enabled else None
@@ -9658,6 +10806,12 @@ def main(profile_performance=False):
         performance.record_since("ui_render", ui_render_started)
         events_started = time.perf_counter_ns() if performance.enabled else None
         for event in pygame.event.get():
+            quick_wheel_y = quick_inspector_wheel_delta(event)
+            if player and quick_wheel_y is not None and handle_quick_inspector_wheel(
+                player, getattr(event, "pos", pygame.mouse.get_pos()), quick_wheel_y,
+            ):
+                tooltip_controller.reset()
+                continue
             if event.type == pygame.QUIT:
                 if player and not profile_performance:
                     player.save_project(); player.save_settings()
@@ -9681,6 +10835,11 @@ def main(profile_performance=False):
             if event.type == pygame.WINDOWFOCUSLOST:
                 cancel_parallax_gizmo_drag(player, restore=True)
                 cancel_parallax_offset_edit(player, restore=True)
+                end_viewport_object_drag(player, viewport_click)
+                viewport_click = None
+                right_viewport_input = None
+                quick_inspector_drag = None
+                is_dragging_cam = False
             if event.type == pygame.DROPFILE:
                 sid = player.add_source(event.file)
                 if sid is not None:
@@ -9700,14 +10859,54 @@ def main(profile_performance=False):
                         if player.popup.get('no_cb'): player.popup['no_cb']()
                         player.popup = None
                 else:
+                    if getattr(player, "quick_inspector", None):
+                        click_pos = getattr(event, "pos", m_pos)
+                        if event.button == 1:
+                            inspector_control = next(
+                                (control for control in reversed(quick_inspector_controls)
+                                 if control["rect"].collidepoint(click_pos)),
+                                None,
+                            )
+                            if inspector_control is not None:
+                                navigation = handle_quick_inspector_action(player, inspector_control)
+                                if navigation:
+                                    sidebar_mode = SIDEBAR_SETTINGS
+                                    settings_section = (
+                                        SETTINGS_SECTION_CONTROLS_APP
+                                        if navigation == "player_settings"
+                                        else SETTINGS_SECTION_SCENE_COMBAT
+                                    )
+                                    settings_scroll = 0
+                                continue
+                            quick_inspector_drag = begin_quick_inspector_drag(player, click_pos)
+                            if quick_inspector_drag is not None:
+                                continue
+                        if (
+                            event.button in (1, 3)
+                            and player.quick_inspector["rect"].collidepoint(click_pos)
+                        ):
+                            player.quick_inspector["dropdown_open"] = False
+                            continue
                     if (
                         event.button == 1
                         and begin_parallax_gizmo_drag(player, m_pos, play_w, play_h)
                     ):
                         is_dragging_cam = False
                         continue
-                    if event.button == 3 and m_pos[0] < play_w: is_dragging_cam = True; last_m_pos = m_pos; player.cam_follow = False
+                    if event.button == 3 and m_pos[0] < play_w:
+                        right_viewport_input = {
+                            "start": m_pos, "last": m_pos, "dragging": False,
+                        }
                     if event.button == 1:
+                        if (
+                            m_pos[0] < play_w
+                            and m_pos[1] >= TOP_UI_HEIGHT
+                            and not player.edit_platforms
+                        ):
+                            target = viewport_actor_at(player, m_pos, play_w, play_h)
+                            viewport_click = begin_viewport_object_drag(
+                                player, target, m_pos, play_w, play_h,
+                            ) or {"target": None, "start": m_pos, "dragging": False}
                         # Top Bar Interaction
                         if m_pos[1] < TOP_UI_HEIGHT:
                             header_target = sidebar_header_click_target(
@@ -10078,6 +11277,9 @@ def main(profile_performance=False):
                                 for i, action in enumerate(cur_p.mappings.keys()):
                                     if pygame.Rect(play_w+20, MAPPING_SLOT_TOP+i*38+slot_scroll, sidebar_w-40, 34).collidepoint(m_pos): cur_p.mappings[action] = []
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                if quick_inspector_drag is not None:
+                    quick_inspector_drag = None
+                    continue
                 was_parallax_drag = bool(getattr(player, "parallax_gizmo_dragging", False))
                 was_parallax_slider = bool(getattr(player, "parallax_offset_edit", None))
                 changed = end_parallax_gizmo_drag(player)
@@ -10085,13 +11287,37 @@ def main(profile_performance=False):
                 if changed:
                     player.save_settings()
                 if was_parallax_drag or was_parallax_slider:
+                    viewport_click = None
                     continue
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 3: is_dragging_cam = False
+                if viewport_click is not None:
+                    release_pos = getattr(event, "pos", m_pos)
+                    if not player.edit_platforms:
+                        finish_viewport_left_input(
+                            player, viewport_click, release_pos, play_w, play_h,
+                        )
+                    viewport_click = None
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 3:
+                release_pos = getattr(event, "pos", m_pos)
+                finish_viewport_right_input(
+                    player, right_viewport_input, release_pos, play_w, play_h,
+                )
+                right_viewport_input = None
+                is_dragging_cam = False
             if event.type == pygame.KEYDOWN and player:
                 if event.key == pygame.K_F10:
                     enable_performance = not performance.enabled
                     performance.set_enabled(enable_performance, clear=enable_performance)
                     player.performance_monitor = performance
+                    continue
+                inspector_state = getattr(player, "quick_inspector", None)
+                if inspector_state and event.key == pygame.K_ESCAPE:
+                    close_quick_inspector(player)
+                    continue
+                if inspector_state and quick_inspector_keyboard(
+                    inspector_state,
+                    quick_inspector_tags(player, inspector_state.get("target")),
+                    event.key,
+                ):
                     continue
                 if active_input_attr:
                     if event.key == pygame.K_RETURN:
@@ -10159,7 +11385,11 @@ def main(profile_performance=False):
                 else:
                     if "JUMP" not in player.key_map: player.key_map["JUMP"] = pygame.K_SPACE
                     k = event.key; km = player.key_map
-                    if sidebar_mode in {SIDEBAR_SCENE, SIDEBAR_RESOURCES} and k == pygame.K_ESCAPE:
+                    if player_preview_blocks_gameplay_key(player, k):
+                        continue
+                    if k == pygame.K_ESCAPE and getattr(player, "quick_inspector", None):
+                        close_quick_inspector(player)
+                    elif sidebar_mode in {SIDEBAR_SCENE, SIDEBAR_RESOURCES} and k == pygame.K_ESCAPE:
                         sidebar_mode = SIDEBAR_MAPPING
                         workspace_controls = []
                         workspace_viewport = None
@@ -10193,6 +11423,10 @@ def main(profile_performance=False):
                             player.scene_status_message = ""
                         else:
                             show_user_error(tr("error.source_refresh_title"), tr("error.source_refresh"), key="manual-source-refresh")
+                    elif k == pygame.K_F9 and can_use_hp_recovery_shortcut(
+                        player, active_input_attr, binding_key,
+                    ):
+                        restore_player_hp(player)
                     elif k in [pygame.K_DELETE, pygame.K_BACKSPACE] and getattr(player, 'edit_platforms', False) and player.selected_plat is not None:
                         if player.selected_plat < 1000 and player.selected_plat < len(player.platforms):
                             player.platforms.pop(player.selected_plat)
@@ -10263,6 +11497,12 @@ def main(profile_performance=False):
                             total_h = len(src.tag_list) * 25
                             tag_scroll = max(min(0, tag_scroll + delta), -max(0, total_h - (sh - MAPPING_TAG_TOP - 20)))
             if event.type == pygame.MOUSEMOTION and player:
+                motion_pos = getattr(event, "pos", m_pos)
+                if quick_inspector_drag is not None:
+                    update_quick_inspector_drag(
+                        player, quick_inspector_drag, motion_pos, play_w, play_h,
+                    )
+                    continue
                 if update_parallax_gizmo_drag(
                     player,
                     m_pos,
@@ -10294,9 +11534,24 @@ def main(profile_performance=False):
                             player.prop_list[player.selected_plat - 2000].x = mx + player.drag_offset[0]
                             player.prop_list[player.selected_plat - 2000].y = my + player.drag_offset[1]
                 
-                elif is_dragging_cam: 
-                    dx, dy = m_pos[0] - last_m_pos[0], m_pos[1] - last_m_pos[1]
-                    player.cam_x -= dx / player.zoom; player.cam_y -= dy / player.zoom; last_m_pos = m_pos
+                elif viewport_click is not None and not player.edit_platforms:
+                    update_viewport_object_drag(
+                        player, viewport_click, motion_pos, play_w, play_h,
+                    )
+                elif right_viewport_input is not None:
+                    if not right_viewport_input["dragging"]:
+                        dx = motion_pos[0] - right_viewport_input["start"][0]
+                        dy = motion_pos[1] - right_viewport_input["start"][1]
+                        if math.hypot(dx, dy) > VIEWPORT_CLICK_THRESHOLD:
+                            right_viewport_input["dragging"] = True
+                            is_dragging_cam = True
+                            player.cam_follow = False
+                    if right_viewport_input["dragging"]:
+                        previous = right_viewport_input["last"]
+                        dx, dy = motion_pos[0] - previous[0], motion_pos[1] - previous[1]
+                        player.cam_x -= dx / player.zoom
+                        player.cam_y -= dy / player.zoom
+                        right_viewport_input["last"] = motion_pos
         performance.record_since("events", events_started)
         ui_render_started = time.perf_counter_ns() if performance.enabled else None
         if sidebar_mode == SIDEBAR_MAPPING:
@@ -11052,6 +12307,9 @@ def main(profile_performance=False):
         fps = int(clock.get_fps())
         fps_color = (22, 163, 74) if fps >= 55 else ((220, 160, 38) if fps >= 30 else (220, 38, 38))
         screen.blit(font_b.render(f"FPS: {fps} | Zoom: {player.zoom:.1f}x", True, fps_color), (10, 75))
+        quick_inspector_controls = draw_quick_inspector(
+            screen, player, play_w, play_h, (font_s, font_b), tooltip_regions,
+        )
 
         performance.record_since("ui_render", ui_render_started)
         tooltip_render_started = time.perf_counter_ns() if performance.enabled else None

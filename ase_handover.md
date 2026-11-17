@@ -953,3 +953,101 @@ Pygame-based Aseprite previewer with action game physics. Focuses on accurate an
   `ase_viewer_v0.5.8.3_with_examples.zip` plus its `.sha256`.
 - Cleanup quarantine is intentionally ignored and must never be committed.
   The existing `v0.5.8.3` tag is not moved or recreated.
+
+## 40. v0.5.8.4 Recovery FX / Combat Phase / Icon Hotfix (uncommitted, 2026-07-28)
+
+- Added F9 as a non-remappable application shortcut. It restores Player HP,
+  clears only hit/dead/down test blockers, preserves position and every scene
+  collection, does not call settings/project save, and is ignored during
+  numeric/text input, key binding, or modal confirmation.
+- Added twelve finite 480ms recovery orbit particles on the existing particle
+  update/render path. Repeated F9 replaces only the prior recovery burst.
+- Added case-insensitive separator/camel-aware phase classification. Ready,
+  Windup, Prepare/Prep, Start, Intro, Recover/Recovery, End, and Outro tags
+  cannot create authored or fallback NPC hitboxes.
+- Apply the existing 35–60% active-window policy to the duration and offset of
+  mapped damaging tags. Pure Attack, ComboAttack_n, and mapped authored action
+  names such as ThrustForward remain damage-capable; combo one-hit-per-segment
+  behavior is unchanged.
+- Read-only inspection of the protected root fixture found
+  `ThrustForward_Ready` frames 29–38 followed by `ThrustForward` frames 39–47.
+  No Aseprite CLI or resource write was performed.
+- Preserve `Icon.ico` as the executable resource, bundle `Icon.png` as onefile
+  data, call `pygame.display.set_icon()` before `set_mode()`, and set the stable
+  Windows AppUserModelID `ToastSource.AsepriteActionViewer`. All runtime icon
+  failures remain non-fatal.
+- Source compile/check/sidebar/diff checks passed. All 86 test modules passed
+  independently: 429 tests, one optional fixture skip.
+- Built only in `build_v0.5.8.4` and `dist_v0.5.8.4`. The EXE is 19,607,852
+  bytes with SHA-256
+  `3BF37DDDE0C1666E133D0EE1F2DA9D1118F4F92CD5799A392097CC83D67CC233`.
+  Frozen check reports Tcl/Tk 8.6.12 and `runtime_icon=available`.
+- Staging frozen checks found all examples 9/9 and passed sidebar UI. Created
+  `ase_viewer_v0.5.8.4_with_examples.zip` (22,085,231 bytes), SHA-256
+  `2532C273C4CF9930CF882EF1F84CAE55C9A97479A69123431560B1299EDEC2D2`,
+  plus its companion `.sha256`.
+- The build remains unsigned. No signing, Aseprite CLI, full GUI automation,
+  commit, tag, push, old-output deletion, or protected-data write was done.
+
+## 41. v0.5.8.4 Post-build Icon / Attack Timing Polish (uncommitted, 2026-07-28)
+
+- This is source-only follow-up work and remains `APP_VERSION v0.5.8.4`.
+  The existing EXE, ZIP, and SHA files predate it and remain untouched.
+- The user replaced `Icon.png`; it opens as 1024×1024 RGBA with alpha.
+  Regenerated `Icon.ico` with 16/32/48/64/128/256 sizes and alpha.
+- PNG SHA-256:
+  `A28F575ED0A82B04972A62349423A1A5C46B558EB4AA30E26161881A5951D3D8`.
+  ICO SHA-256:
+  `D6E6670F0BDD41A9F5E20430E0B74176DC39E6B1B9A89C021DF8970977851EE8`.
+- Keep spec `Icon.ico` and bundled `Icon.png` connections unchanged.
+- Each mapped damage tag now owns a local 0–25% window instead of a combined
+  35–60% span. A minimum 40ms is capped to the tag duration.
+- Ready/preparation/recovery tags remain excluded from authored and fallback
+  hitboxes. TwistedSoldier's `ThrustForward` becomes active immediately after
+  `ThrustForward_Ready`, while its middle/late phase is inactive.
+- No PyInstaller, packaging, ZIP creation, signing, Aseprite CLI, full GUI,
+  commit, tag, or push was performed. Rebuild only with a later feature/fix.
+
+## 42. v0.5.8.5 Viewport Quick Inspector (uncommitted, source only, 2026-08-14)
+
+- Added click-on-release inspection for visible Player/NPC/PROP instances.
+  Picking uses the current rendered frame rectangle and reverse actor draw order;
+  movement beyond 6px is treated as a drag.
+- Added one clamped, fixed-position inspector with empty-click/Esc close,
+  identity-based targeting, stale-target cleanup, localized labels, and tooltips.
+- Added a separate forced-animation visual track. Current-tag preview and existing
+  mapped combo/action sequences do not replace runtime animation, movement, AI,
+  HP, death, or attack-lock state and cannot generate damage/projectiles/hitboxes.
+- Reused existing profile spawn, NPC death, and PROP destruction paths. Added a
+  small `spawn_prop_profile` counterpart so inspector placement does not duplicate
+  construction logic. Despawn removes only the selected runtime instance.
+- Runtime inspector/preview fields are outside project/settings serialization.
+- No build, package, ZIP, signing, Aseprite CLI, commit, tag, push, protected JSON,
+  fixture, or existing v0.5.8.4 output change was performed.
+
+### v0.5.8.5 follow-up input / isolated preview UX
+
+- Left click now selects only; left drag repositions Player/NPC/PROP with a 6px
+  threshold and world-space grab offset. Right click opens the inspector while
+  right drag preserves camera pan.
+- The tag list shows at most eight rows with internal wheel scrolling, a scroll
+  indicator, selected-tag reveal, and Up/Down/Page/Home/End keyboard navigation.
+- Preview scope and repeat are independent. Loop metadata never overrides Once;
+  Repeat restarts only after the full resolved playback sequence completes.
+- Player gameplay motion/actions and NPC AI/locomotion/Dash/Jump/Attack progression
+  are paused without reset during preview. Editor object drag remains available;
+  existing actual death/destruction handlers stop preview and remain authoritative.
+- The title bar is the only inspector drag handle. Its clamped manual position is
+  retained across target changes and close/reopen for the current process only.
+
+### v0.5.8.5 follow-up GUI corrections
+
+- Replaced Player facing buttons with a single position reset that reuses
+  `spawn_x/spawn_y`, clears only velocity, and preserves HP, profile, resource,
+  facing, and animation state.
+- Derive panel height from the final control plus 10px bottom padding (Player 300,
+  NPC/PROP 336). A retained manual rectangle is resized for the new target before
+  viewport clamping, fixing NPC/PROP controls drawn outside a Player-sized panel.
+- Give an open tag combo first priority for both `MOUSEWHEEL` and legacy Windows
+  button 4/5 input. The event is consumed before popup/control/object/camera paths,
+  so wheel scrolling cannot zoom the viewport or close the dropdown.

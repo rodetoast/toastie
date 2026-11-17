@@ -30,13 +30,11 @@ def combat_pair(player_x=80, facing_right=True):
 
 
 class NpcAttackHitboxTests(unittest.TestCase):
-    def test_front_target_is_hit_only_when_window_is_reached(self):
+    def test_front_target_is_hit_immediately_and_only_once(self):
         npc, player = combat_pair()
-        ase_viewer._update_npc_attack_state(npc, 100)
-        self.assertEqual(player.hp, 100)
-        ase_viewer._update_npc_attack_state(npc, 60)
+        ase_viewer._update_npc_attack_state(npc, 1)
         self.assertEqual(player.hp, 95)
-        ase_viewer._update_npc_attack_state(npc, 80)
+        ase_viewer._update_npc_attack_state(npc, 200)
         self.assertEqual(player.hp, 95)
         self.assertTrue(npc.npc_attack_has_hit)
 
